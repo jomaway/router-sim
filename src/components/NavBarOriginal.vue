@@ -15,8 +15,7 @@ import {
   mdiEmail,
   mdiLogout,
   mdiGithub,
-  mdiThemeLightDark,
-  mdiHelpCircleOutline
+  mdiThemeLightDark
 } from '@mdi/js'
 import NavBarItem from '@/components/NavBarItem.vue'
 import NavBarItemLabel from '@/components/NavBarItemLabel.vue'
@@ -83,10 +82,9 @@ const menuOpenLg = () => {
           size="24"
         />
       </nav-bar-item>
-      <!-- search 
       <nav-bar-item>
         <nav-bar-search />
-      </nav-bar-item> --> 
+      </nav-bar-item>
     </div>
     <div class="flex-none items-stretch flex h-14 lg:hidden">
       <nav-bar-item @click.prevent="menuNavBarToggle">
@@ -104,7 +102,67 @@ const menuOpenLg = () => {
       <div
         class="max-h-screen-menu overflow-y-auto lg:overflow-visible lg:flex lg:items-stretch lg:justify-end lg:ml-auto"
       >
-    
+        <nav-bar-menu has-divider>
+          <nav-bar-item-label
+            :icon="mdiMenu"
+            label="Sample menu"
+          />
+
+          <template #dropdown>
+            <nav-bar-item>
+              <nav-bar-item-label
+                :icon="mdiClockOutline"
+                label="Item One"
+              />
+            </nav-bar-item>
+            <nav-bar-item>
+              <nav-bar-item-label
+                :icon="mdiCloud"
+                label="Item Two"
+              />
+            </nav-bar-item>
+            <divider nav-bar />
+            <nav-bar-item>
+              <nav-bar-item-label
+                :icon="mdiCrop"
+                label="Item Last"
+              />
+            </nav-bar-item>
+          </template>
+        </nav-bar-menu>
+        <nav-bar-menu has-divider>
+          <nav-bar-item-label :label="userName">
+            <user-avatar class="w-6 h-6 mr-3 inline-flex" />
+          </nav-bar-item-label>
+
+          <template #dropdown>
+            <nav-bar-item to="/profile">
+              <nav-bar-item-label
+                :icon="mdiAccount"
+                label="My Profile"
+              />
+            </nav-bar-item>
+            <nav-bar-item>
+              <nav-bar-item-label
+                :icon="mdiCogOutline"
+                label="Settings"
+              />
+            </nav-bar-item>
+            <nav-bar-item>
+              <nav-bar-item-label
+                :icon="mdiEmail"
+                label="Messages"
+              />
+            </nav-bar-item>
+            <divider nav-bar />
+            <nav-bar-item>
+              <nav-bar-item-label
+                :icon="mdiLogout"
+                label="Log Out"
+              />
+            </nav-bar-item>
+          </template>
+        </nav-bar-menu>
         <nav-bar-item
           has-divider
           is-desktop-icon-only
@@ -117,13 +175,13 @@ const menuOpenLg = () => {
           />
         </nav-bar-item>
         <nav-bar-item
-          href="/help"
+          href="https://github.com/justboil/admin-one-vue-tailwind"
           has-divider
           is-desktop-icon-only
         >
           <nav-bar-item-label
-            :icon="mdiHelpCircleOutline "
-            label="Help"
+            :icon="mdiGithub"
+            label="GitHub"
             is-desktop-icon-only
           />
         </nav-bar-item>

@@ -1,5 +1,5 @@
 <script setup>
-import { mdiGithub } from '@mdi/js'
+import { mdiGithub, mdiHelp } from '@mdi/js'
 import Level from '@/components/Level.vue'
 import JbButton from '@/components/JbButton.vue'
 
@@ -25,11 +25,10 @@ defineProps({
         </li>
       </ul>
       <jb-button
-        href="https://github.com/justboil/admin-one-vue-tailwind"
-        color="info"
-        label="Star on GitHub"
-        target="_blank"
-        :icon="mdiGithub"
+        to="/help"
+        color="warning"
+        label="Help"
+        :icon="mdiHelp"
       />
     </level>
   </section>

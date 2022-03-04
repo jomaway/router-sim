@@ -1,69 +1,108 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import Style from '@/views/Style.vue'
-import Home from '@/views/Home.vue'
+import Status from '@/views/Status.vue'
+import Login from '@/views/Login.vue'
 
 const routes = [
   {
     meta: {
-      title: 'Select style',
+      title: 'Login router-sim',
       fullScreen: true
     },
     path: '/',
-    name: 'style',
-    component: Style
+    name: 'login',
+    component: Login
   },
   {
     // Document title tag
     // We combine it with defaultDocumentTitle set in `src/main.js` on router.afterEach hook
     meta: {
-      title: 'Dashboard'
+      title: 'Status'
     },
-    path: '/dashboard',
-    name: 'dashboard',
-    component: Home
+    path: '/status',
+    name: 'status',
+    component: Status
   },
   {
     meta: {
-      title: 'Tables'
+      title: 'Wifi Settings'
     },
-    path: '/tables',
-    name: 'tables',
+    path: '/wifi-settings',
+    name: 'wifi-settings',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "tables" */ '@/views/Tables.vue')
+    component: () => import(/* webpackChunkName: "wifi-settings" */ '@/views/Wifi_Settings.vue')
   },
   {
     meta: {
-      title: 'Forms'
+      title: 'Wifi Security'
     },
-    path: '/forms',
-    name: 'forms',
-    component: () => import(/* webpackChunkName: "forms" */ '@/views/Forms.vue')
+    path: '/wifi-security',
+    name: 'wifi-security',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "wifi-security" */ '@/views/Wifi_Security.vue')
   },
   {
     meta: {
-      title: 'Profile'
+      title: 'Wifi Mac Filtering'
     },
-    path: '/profile',
-    name: 'profile',
-    component: () => import(/* webpackChunkName: "profile" */ '@/views/Profile.vue')
+    path: '/wifi-mac',
+    name: 'wifi-mac',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "wifi-macfiltering" */ '@/views/Wifi_MacFiltering.vue')
   },
   {
     meta: {
-      title: 'Ui'
+      title: 'Wifi Advanced'
     },
-    path: '/ui',
-    name: 'ui',
-    component: () => import(/* webpackChunkName: "ui" */ '@/views/Ui.vue')
+    path: '/wifi-advanced',
+    name: 'wifi-advanced',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "wifi-advanced" */ '@/views/Wifi_Advanced.vue')
   },
   {
     meta: {
-      title: 'Responsive layout'
+      title: 'Wifi Statistics'
     },
-    path: '/responsive',
-    name: 'responsive',
-    component: () => import(/* webpackChunkName: "responsive" */ '@/views/Responsive.vue')
+    path: '/wifi-stats',
+    name: 'wifi-stats',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "wifi-stats" */ '@/views/Wifi_Stats.vue')
+  },
+  {
+    meta: {
+      title: 'WAN'
+    },
+    path: '/wan',
+    name: 'wan',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "wan" */ '@/views/Wan.vue')
+  },
+  {
+    meta: {
+      title: 'Lan'
+    },
+    path: '/lan',
+    name: 'lan',
+    component: () => import(/* webpackChunkName: "lan" */ '@/views/Lan.vue')
+  },
+  {
+    meta: {
+      title: 'Help'
+    },
+    path: '/help',
+    name: 'help',
+    component: () => import(/* webpackChunkName: "help" */ '@/views/Help.vue')
   },
   {
     meta: {
@@ -71,7 +110,7 @@ const routes = [
       fullScreen: true
     },
     path: '/login',
-    name: 'login',
+    name: 'login2',
     component: () => import(/* webpackChunkName: "login" */ '@/views/Login.vue')
   },
   {

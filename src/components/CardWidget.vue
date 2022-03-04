@@ -12,7 +12,7 @@ import JbButton from '@/components/JbButton.vue'
 defineProps({
   number: {
     type: Number,
-    default: 0
+    default: 100
   },
   icon: {
     type: String,
@@ -41,7 +41,16 @@ defineProps({
   trendType: {
     type: String,
     default: null
+  },
+  ipv4: {
+    type: String,
+    default: null
+  },
+  link: {
+    type: String,
+    default: "/status"
   }
+
 })
 
 const store = useStore()
@@ -62,6 +71,7 @@ const darkMode = computed(() => store.state.darkMode)
         small
       />
       <jb-button
+        href= link
         :icon="mdiCog"
         icon-w="w-4"
         icon-h="h-4"
@@ -76,7 +86,8 @@ const darkMode = computed(() => store.state.darkMode)
           {{ label }}
         </h3>
         <h1 class="text-3xl leading-tight font-semibold">
-          <growing-number
+          {{ ipv4 }}
+          <growing-number v-if="number != 0"
             :value="number"
             :prefix="prefix"
             :suffix="suffix"

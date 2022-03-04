@@ -8,6 +8,7 @@ import { darkModeKey, styleKey } from '@/config.js'
 import './css/main.css'
 
 /* Fetch sample data */
+store.dispatch('fetch', 'macFilters')
 store.dispatch('fetch', 'clients')
 store.dispatch('fetch', 'history')
 
@@ -20,7 +21,7 @@ if ((!localStorage[darkModeKey] && window.matchMedia('(prefers-color-scheme: dar
 }
 
 /* Default title tag */
-const defaultDocumentTitle = 'Admin One Vue 3 Tailwind'
+const defaultDocumentTitle = 'router-sim'
 
 /* Collapse mobile aside menu on route change */
 router.beforeEach(to => {

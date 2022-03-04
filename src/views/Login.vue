@@ -12,7 +12,7 @@ import JbButton from '@/components/JbButton.vue'
 import JbButtons from '@/components/JbButtons.vue'
 
 const form = reactive({
-  login: 'john.doe',
+  login: 'Administrator',
   pass: 'highly-secure-password-fYjUw-',
   remember: ['remember']
 })
@@ -20,7 +20,7 @@ const form = reactive({
 const router = useRouter()
 
 const submit = () => {
-  router.push('/dashboard')
+  router.push('/status')
 }
 </script>
 

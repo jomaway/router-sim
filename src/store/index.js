@@ -43,8 +43,37 @@ export default createStore({
     isFieldFocusRegistered: false,
 
     /* Sample data (commonly used) */
+    macFilters: [],
     clients: [],
-    history: []
+    history: [],
+
+    // network settings
+    network: {
+      wanType: 0,
+      wanIp: '80.12.123.32',
+      wanMask: '255.0.0.0',
+      wanStatus: 'connected',
+      wanGateway: '80.10.1.1',
+      lanIp: '192.168.188.1',
+      lanMask: '255.255.255.0',
+      lanStatus: 'connected',
+    },
+    wifi: {
+      ssid: '',
+      mode: 0,  // 11 b only
+      channel: 10,  // auto
+      channel_width: 2,  // 20/40MHz
+      twoPointFourGHz: true,
+      fiveGHz: false,
+      security_mode: 'disabled',
+      security_version: '',
+      security_encryption: '',
+      security_pw: '',
+      security_radius: {
+        ip: '',
+        port: '1812',
+      },
+    }
   },
   mutations: {
     /* A fit-them-all commit */
@@ -74,6 +103,42 @@ export default createStore({
       if (payload.avatar) {
         state.userAvatar = payload.avatar
       }
+    },
+    /* Wifi */
+    wifi (state, payload) {
+      if (payload.ssid) {
+        state.wifi.ssid = payload.ssid
+      }
+      if (payload.mode) {
+        state.wifi.mode = payload.mode.id
+      }
+      if (payload.channel) {
+        state.wifi.channel = payload.channel.id
+      }
+      if (payload.channel_width) {
+        state.wifi.channel_width = payload.channel_width.id
+      }
+      if (payload.frequenz) {
+        console.log(payload.frequenz.includes('twopointfour'))
+        state.wifi.twoPointFourGHz = payload.frequenz.includes('twopointfour')
+        state.wifi.fiveGHz = payload.frequenz.includes('five')
+      }
+      // security
+      if (payload.selected) {
+        state.wifi.security_mode = payload.selected
+      }
+      if (payload.wpa_p) {
+        state.wifi.security_version = payload.wpa_p.version
+        state.wifi.security_encryption = payload.wpa_p.encryption
+        state.wifi.security_pw = payload.wpa_p.pw
+      }
+      if (payload.wpa_e) {
+        state.wifi.security_version = payload.wpa_e.version
+        state.wifi.security_encryption = payload.wpa_e.encryption
+        state.wifi.security_radius.ip = payload.wpa_e.ip
+        state.wifi.security_radius.port = payload.wpa_e.port
+      }
+      console.log("All wifi-Settings stored")
     }
   },
   actions: {

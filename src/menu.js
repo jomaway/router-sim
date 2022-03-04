@@ -10,84 +10,72 @@ import {
   mdiViewList,
   mdiTelevisionGuide,
   mdiResponsive,
-  mdiPalette
+  mdiPalette,
+  mdiWifi,
+  mdiWeb,
+  mdiLan
 } from '@mdi/js'
 
 export default [
   'General',
   [
     {
-      to: '/dashboard',
+      to: '/status',
       icon: mdiDesktopMac,
-      label: 'Dashboard'
-    }
+      label: 'Status'
+    },
   ],
-  'Examples',
+  'Network',
   [
     {
-      to: '/tables',
-      label: 'Tables',
-      icon: mdiTable
+      to: '/wan',
+      icon: mdiWeb,
+      label: 'Wan'
     },
     {
-      to: '/forms',
-      label: 'Forms',
-      icon: mdiSquareEditOutline
+      to: '/lan',
+      icon: mdiLan,
+      label: 'Lan'
+    }
+  ],
+  'Wireless',
+  [
+    {
+      to: '/wifi-settings',
+      label: 'Settings',
+      icon: mdiWifi
     },
     {
-      to: '/ui',
-      label: 'UI',
-      icon: mdiTelevisionGuide
-    },
-    {
-      to: '/responsive',
-      label: 'Responsive',
-      icon: mdiResponsive
-    },
-    {
-      to: '/',
-      label: 'Styles',
-      icon: mdiPalette
-    },
-    {
-      to: '/profile',
-      label: 'Profile',
-      icon: mdiAccountCircle
-    },
-    {
-      to: '/login',
-      label: 'Login',
+      to: '/wifi-security',
+      label: 'Security',
       icon: mdiLock
     },
     {
-      to: '/error',
-      label: 'Error',
-      icon: mdiAlertCircle
+      to: '/wifi-mac',
+      label: 'MAC Filtering',
+      icon: mdiTelevisionGuide
     },
     {
-      label: 'Submenus',
-      subLabel: 'Submenus Example',
-      icon: mdiViewList,
-      menu: [
-        {
-          label: 'Sub-item One'
-        },
-        {
-          label: 'Sub-item Two'
-        }
-      ]
-    }
+      to: '/wifi-advanced',
+      label: 'Advanced',
+      icon: mdiResponsive
+    },
+    {
+      to: '/wifi-stats',
+      label: 'Statistics',
+      icon: mdiPalette
+    },
   ],
-  'About',
+  'Extra',
   [
     {
-      href: 'https://justboil.me/tailwind-admin-templates/vue-dashboard/',
-      label: 'Premium version',
+      href: '',
+      label: 'About',
       icon: mdiMonitorShimmer,
       target: '_blank'
     },
     {
-      href: 'https://github.com/justboil/admin-one-vue-tailwind',
+      href: '',
       label: 'GitHub',
       icon: mdiGithub,
       target: '_blank'

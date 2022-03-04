@@ -16,7 +16,8 @@ const props = defineProps({
   color: {
     type: String,
     required: true
-  }
+  },
+  permanent: Boolean
 })
 
 const componentClass = computed(() => props.outline
@@ -61,12 +62,13 @@ const darkMode = computed(() => store.state.darkMode)
         name="right"
       />
       <jb-button
-        v-else
+        v-else-if="!props.permanent"
         :icon="mdiClose"
         :outline="outline || (darkMode && ['white', 'light'].indexOf(color) < 0)"
         small
         @click="dismiss"
       />
+      <div v-else></div>
     </level>
   </div>
 </template>

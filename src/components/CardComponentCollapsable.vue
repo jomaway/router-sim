@@ -1,7 +1,7 @@
 <script setup>
-import { mdiCog } from '@mdi/js'
+import { mdiCog, mdiChevronDown, mdiChevronUp } from '@mdi/js'
 import { useStore } from 'vuex'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import Icon from '@/components/Icon.vue'
 
 const props = defineProps({
@@ -13,14 +13,11 @@ const props = defineProps({
     type: String,
     default: null
   },
-  headerIcon: {
-    type: String,
-    default: null
-  },
   rounded: {
     type: String,
     default: 'md:rounded'
   },
+  expanded: Boolean,
   hasTable: Boolean,
   empty: Boolean,
   form: Boolean,
@@ -28,7 +25,7 @@ const props = defineProps({
   modal: Boolean
 })
 
-const emit = defineEmits(['header-icon-click', 'submit'])
+const emit = defineEmits(['toggle-expand-clicked', 'submit'])
 
 const is = computed(() => props.form ? 'form' : 'div')
 
@@ -50,15 +47,19 @@ const componentClass = computed(() => {
   return base
 })
 
-const computedHeaderIcon = computed(() => props.headerIcon )
+const computedHeaderIcon = computed(() => isExpanded.value ? mdiChevronUp : mdiChevronDown)
 
-const headerIconClick = () => {
-  emit('header-icon-click')
+const toggleExpanded = () => {
+  emit('toggle-expand-clicked')
+  isExpanded.value = !isExpanded.value
 }
 
 const submit = e => {
   emit('submit', e)
 }
+
+const isExpanded = ref(props.expanded)
+
 </script>
 
 <template>
@@ -84,27 +85,20 @@ const submit = e => {
         />
         {{ title }}
       </p>
-      <a
-        v-if="computedHeaderIcon"
-        href="#"
+      <button
         class="flex items-center py-3 px-4 justify-center ring-blue-700 focus:ring"
         aria-label="more options"
-        @click.prevent="headerIconClick"
+        @click="toggleExpanded"
       >
-        <icon :path="computedHeaderIcon" />
-      </a>
+        <icon  :path="computedHeaderIcon" />
+      </button>
     </header>
-    <div
-      v-if="empty"
-      class="text-center py-24 text-gray-500 dark:text-gray-400"
-    >
-      <p>Nothing's here…</p>
-    </div>
-    <div
-      v-else
-      :class="{'p-6':!hasTable}"
-    >
-      <slot />
+    <div v-show="isExpanded">
+      <div
+        :class="{'p-6':!hasTable}"
+      >
+        <slot />
+      </div>
     </div>
   </component>
 </template>
