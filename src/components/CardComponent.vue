@@ -1,5 +1,4 @@
 <script setup>
-import { mdiCog } from '@mdi/js'
 import { useStore } from 'vuex'
 import { computed } from 'vue'
 import Icon from '@/components/Icon.vue'
@@ -50,7 +49,7 @@ const componentClass = computed(() => {
   return base
 })
 
-const computedHeaderIcon = computed(() => props.headerIcon )
+const computedHeaderIcon = computed(() => props.headerIcon)
 
 const headerIconClick = () => {
   emit('header-icon-click')

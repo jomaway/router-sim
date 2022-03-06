@@ -79,7 +79,7 @@ const checked = (isChecked, client) => {
 <template>
   <modal-box
     v-model="isModalActive"
-    title="Sample modal"
+    title="Sample Modal"
   >
     <p>Lorem ipsum dolor sit amet <b>adipiscing elit</b></p>
     <p>This is sample modal</p>
@@ -91,8 +91,8 @@ const checked = (isChecked, client) => {
     button="danger"
     has-cancel
   >
-    <p>Lorem ipsum dolor sit amet <b>adipiscing elit</b></p>
-    <p>This is sample modal</p>
+    <p>Do you really want to <b>delete</b> this item</p>
+    <p>This won't work as this is only an simulation.</p>
   </modal-box>
 
   <div
@@ -155,12 +155,12 @@ const checked = (isChecked, client) => {
             type="justify-start lg:justify-end"
             no-wrap
           >
-            <jb-button
+            <!-- <jb-button
               color="info"
               :icon="mdiEye"
               small
               @click="isModalActive = true"
-            />
+            /> -->
             <jb-button
               color="danger"
               :icon="mdiTrashCan"

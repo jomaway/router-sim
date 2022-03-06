@@ -1,6 +1,7 @@
 <script setup>
-import { ref } from 'vue'
-import { mdiMonitorCellphone, mdiFilterOutline , mdiTableBorder, mdiTableOff } from '@mdi/js'
+import { ref, reactive,computed } from 'vue'
+import { useStore } from 'vuex'
+import { mdiMonitorCellphone, mdiFilterOutline, mdiTableBorder, mdiTableOff } from '@mdi/js'
 import MainSection from '@/components/MainSection.vue'
 import Notification from '@/components/Notification.vue'
 import ClientsTable from '@/components/ClientsTable.vue'
@@ -18,8 +19,22 @@ import JbButton from '@/components/JbButton.vue'
 
 const titleStack = ref(['Wireless', 'Mac Filtering'])
 
-const global_status = ref("disabled")
-const mac_filter_rule = ref("deny")
+const store = useStore()
+
+const macFilter = reactive({
+  enabled: 'disabled',
+  rule: store.state.wifi.macFilter.rule
+})
+
+if (store.state.wifi.macFilter.enabled) {
+  macFilter.enabled = 'enabled'
+  console.log('mac Filter is:', macFilter.enabled)
+}
+
+const submit = () => {
+  store.commit('enableMacFilter', macFilter)
+  console.log('Wifi-MacFilter saved')
+}
 
 </script>
 
@@ -37,46 +52,49 @@ const mac_filter_rule = ref("deny")
     <card-component
       class="mb-6"
     >
+      <field
+        label="Wireless Mac Filtering"
+        help="Here you can enable/disable the mac filtering globaly."
+      >
+        <check-radio-picker
+          v-model="macFilter.enabled"
+          name="global_mac_filtering_status"
+          type="radio"
+          :options="{ disabled : 'Disable', enabled: 'Enable' }"
+        />
+      </field>
 
-    <field label="Wireless Mac Filtering" help="Here you can enable/disable the mac filtering globaly.">
+      <div v-if="macFilter.enabled=='enabled'">
+        <divider />
 
-      <check-radio-picker
-        v-model="global_status"
-        name="global_mac_filtering_status"
-        type="radio"
-        :options="{ disabled : 'Disable', enabled: 'Enable' }"
-      />
-    </field>
-
-    <div v-if="global_status=='enabled'">
-      <divider />
-
-      <field label="Filter Rule" help="Deny -> all devides with the listed mac address are blocked; Allow -> all deviced except the listed are blocked.">
-
-      <check-radio-picker
-        v-model="mac_filter_rule"
-        name="global_mac_filter_rule"
-        type="radio"
-        :options="{ deny : 'Deny all listed devices', allow: 'Allow only listed devices' }"
-      />
-    </field>
-
-    </div>
-      
+        <field
+          label="Filter Rule"
+          help="Deny -> all devides with the listed mac address are blocked; Allow -> all deviced except the listed are blocked."
+        >
+          <check-radio-picker
+            v-model="macFilter.rule"
+            name="global_mac_filter_rule"
+            type="radio"
+            :options="{ deny : 'Deny all listed devices', allow: 'Allow only listed devices' }"
+          />
+        </field>
+      </div>
     </card-component>
 
     <card-component
-      v-if="global_status == 'enabled'"
+      v-if="macFilter.enabled == 'enabled'"
       class="mb-6"
       title="Mac Filters"
       :icon="mdiFilterOutline"
       has-table
     >
-      <mac-filter-table checkable />
+      <mac-filter-table />
     </card-component>
 
-    <divider />
-
+    <card-component
+      form
+      @submit.prevent="submit"
+    >
       <jb-buttons>
         <jb-button
           type="submit"
@@ -90,7 +108,7 @@ const mac_filter_rule = ref("deny")
           label="Reset"
         />
       </jb-buttons>
-    
+    </card-component>
 
   </main-section>
 

@@ -1,6 +1,6 @@
 import { createStore } from 'vuex'
 import axios from 'axios'
-import { darkModeKey, styleKey } from '@/config.js'
+import { darkModeKey, styleKey, wifiSettingsKey } from '@/config.js'
 import * as styles from '@/styles.js'
 
 export default createStore({
@@ -56,23 +56,33 @@ export default createStore({
       wanGateway: '80.10.1.1',
       lanIp: '192.168.188.1',
       lanMask: '255.255.255.0',
-      lanStatus: 'connected',
+      lanStatus: 'connected'
     },
     wifi: {
       ssid: '',
-      mode: 0,  // 11 b only
-      channel: 10,  // auto
-      channel_width: 2,  // 20/40MHz
-      twoPointFourGHz: true,
+      mode: 0, // 11 b only
+      channel: 10, // auto
+      channel_width: 2, // 20/40MHz
+      twoPointFourGHz: false,
       fiveGHz: false,
       security_mode: 'disabled',
-      security_version: '',
-      security_encryption: '',
-      security_pw: '',
-      security_radius: {
-        ip: '',
-        port: '1812',
+      security_psk: {
+        version: 0, // wpa
+        encryption: 0, // tkip
+        pw: ''
       },
+      security_enterprise: {
+        version: 0, // wpa
+        encryption: 0, // tkip
+        radius: {
+          ip: '',
+          port: '1812'
+        }
+      },
+      macFilter: {
+        enabled: false,
+        rule: 'deny'
+      }
     }
   },
   mutations: {
@@ -119,27 +129,39 @@ export default createStore({
         state.wifi.channel_width = payload.channel_width.id
       }
       if (payload.frequenz) {
-        console.log(payload.frequenz.includes('twopointfour'))
+        console.log('Frquenz: includes 2,4 GHz', payload.frequenz.includes('twopointfour'))
+        console.log('Frquenz: includes 5 GHz', payload.frequenz.includes('five'))
         state.wifi.twoPointFourGHz = payload.frequenz.includes('twopointfour')
         state.wifi.fiveGHz = payload.frequenz.includes('five')
       }
       // security
       if (payload.selected) {
         state.wifi.security_mode = payload.selected
+        console.log('Selected security mode is ', state.wifi.security_mode)
       }
-      if (payload.wpa_p) {
-        state.wifi.security_version = payload.wpa_p.version
-        state.wifi.security_encryption = payload.wpa_p.encryption
-        state.wifi.security_pw = payload.wpa_p.pw
+      if (payload.wpa_p && state.wifi.security_mode == 'wpa_psk') {
+        state.wifi.security_psk.version = payload.wpa_p.version.id
+        state.wifi.security_psk.encryption = payload.wpa_p.encryption.id
+        state.wifi.security_psk.pw = payload.wpa_p.pw
+        console.log('wpa_psk settings saved ', state.wifi.security_psk)
       }
-      if (payload.wpa_e) {
-        state.wifi.security_version = payload.wpa_e.version
-        state.wifi.security_encryption = payload.wpa_e.encryption
-        state.wifi.security_radius.ip = payload.wpa_e.ip
-        state.wifi.security_radius.port = payload.wpa_e.port
+      if (payload.wpa_e && state.wifi.security_mode == 'wpa_e') {
+        state.wifi.security_enterprise.version = payload.wpa_e.version.id
+        state.wifi.security_enterprise.encryption = payload.wpa_e.encryption.id
+        state.wifi.security_enterprise.radius.ip = payload.wpa_e.ip
+        state.wifi.security_enterprise.radius.port = payload.wpa_e.port
+        console.log('wpa-enterprise settings saved ', state.wifi.security_enterprise)
       }
-      console.log("All wifi-Settings stored")
+      console.log('All wifi-Settings stored')
+    },
+
+    enableMacFilter(state, payload) {
+      state.wifi.macFilter.enabled = () => payload.enabled == 'enabled' ? true : false
+      state.wifi.macFilter.rule = payload.rule ?? 'deny'
+      console.log('macFilter settings stored ', state.wifi.macFilter)
     }
+
+
   },
   actions: {
     setStyle ({ commit, dispatch }, payload) {
@@ -205,6 +227,16 @@ export default createStore({
         .catch(error => {
           alert(error.message)
         })
+    },
+
+    loadWifiSettings ({state}, payload) {
+      console.log("try to load Wifi Settings from", JSON.parse(payload))
+      state.wifi = JSON.parse(payload)
+    },
+
+    saveWifiSettings ({ commit, state}, payload) {
+      commit('wifi', payload)
+      localStorage.setItem(wifiSettingsKey,  JSON.stringify(state.wifi)) 
     }
   },
   modules: {

@@ -25,50 +25,35 @@ const titleStack = ref(['Wireless', 'Security'])
 
 const store = useStore()
 
-
 const selectEnryptionOptions = [
   { id: 0, label: 'TKIP' },
-  { id: 1, label: 'AES' },
+  { id: 1, label: 'AES' }
 ]
 
 const selectVersionOptions = [
   { id: 0, label: 'WPA' },
   { id: 1, label: 'WPA2' },
-  { id: 2, label: 'WPA3' },
+  { id: 2, label: 'WPA3' }
 ]
 
 const security = reactive({
   selected: store.state.wifi.security_mode,
   wpa_p: {
-    version: store.state.wifi.security_version,
-    encryption: store.state.wifi.security_encryption,
-    pw: store.state.wifi.security_pw,
+    version: selectVersionOptions[store.state.wifi.security_psk.version],
+    encryption: selectEnryptionOptions[store.state.wifi.security_psk.encryption],
+    pw: store.state.wifi.security_psk.pw
   },
   wpa_e: {
-    version: '',
-    encryption: '',
-    ip: store.state.wifi.security_radius.ip,
-    port: store.state.wifi.security_radius.port,
+    version: selectVersionOptions[store.state.wifi.security_enterprise.version],
+    encryption: selectEnryptionOptions[store.state.wifi.security_enterprise.encryption],
+    ip: store.state.wifi.security_enterprise.radius.ip,
+    port: store.state.wifi.security_enterprise.radius.port
   }
 })
 
-const wpa_p = reactive({
-  version: store.state.wifi.security_version,
-  encryption: store.state.wifi.security_encryption,
-  pw: store.state.wifi.security_pw,
-})
-
-const wpa_e = reactive({
-  version: '',
-  encryption: '',
-  ip: store.state.wifi.security_radius.ip,
-  port: store.state.wifi.security_radius.port,
-})
-
-
 const submit = () => {
   store.commit('wifi', security)
-  console.log("Wifi-Security saved")
+  console.log('Wifi-Security saved')
 }
 
 </script>
@@ -84,105 +69,120 @@ const submit = () => {
       form
       @submit.prevent="submit"
     >
-    <check-radio-picker
-      v-model="security.selected"
-      name="selected-security-option"
-      type="radio"
-      :options="{ disabled : 'Disable Security', wpa: 'WPA/WPA2 - Personal', wpa_e : 'WPA/WPA2 Enterprise', wep: 'WEP' }"
-    />
+      <check-radio-picker
+        v-model="security.selected"
+        name="selected-security-option"
+        type="radio"
+        :options="{ disabled : 'Disable Security', wpa_psk: 'WPA/WPA2 - PSK', wpa_e : 'WPA/WPA2 Enterprise', wep: 'WEP' }"
+      />
 
-    <divider/>
+      <divider />
 
-    <div v-if="security.selected == 'disabled'">
-      <notification
-        color="danger"
-        :icon="mdiLockOff"
-      >
-        <b>Warning:</b>
-        You disabled all wifi-security settings.
-        Your network will be open for everyone within reach.
+      <div v-if="security.selected == 'disabled'">
+        <notification
+          color="danger"
+          :icon="mdiLockOff"
+        >
+          <b>Warning:</b>
+          You disabled all wifi-security settings.
+          Your network will be open for everyone within reach.
 
-        <template #right>
-          <icon :path="mdiAlertCircleOutline" />
-        </template>
-      </notification>
-    </div>
+          <template #right>
+            <icon :path="mdiAlertCircleOutline" />
+          </template>
+        </notification>
+      </div>
 
-    <div v-else-if="security.selected == 'wpa'">
-      <div class="grid grid-cols-1 gap-6 mb-6 lg:grid-cols-2 ">
-        <field label="Version" >
+      <div v-else-if="security.selected == 'wpa_psk'">
+        <div class="grid grid-cols-1 gap-6 mb-6 lg:grid-cols-2 ">
+          <field label="Version">
             <control
               v-model="security.wpa_p.version"
               :options="selectVersionOptions"
             />
-        </field>
-        <field label="Encryption" help="Select encryption type" >
+          </field>
+          <field
+            label="Encryption"
+            help="Select encryption type"
+          >
+            <control
+              v-model="security.wpa_p.encryption"
+              :options="selectEnryptionOptions"
+            />
+          </field>
+        </div>
+        <field
+          label="Password"
+          help="Choose a strong password for safety reasons. Verify at https://checkdeinpasswort.de/ "
+        >
           <control
-            v-model="security.wpa_p.encryption"
-            :options="selectEnryptionOptions"
+            v-model="security.wpa_p.pw"
           />
         </field>
       </div>
-      <field label="Password" help="Choose a strong password for safety reasons." >
-        <control
-          v-model="security.wpa_p.pw"
-        />
-      </field>
-    </div>
-    <div v-else-if="security.selected == 'wpa_e'">
-      <div class="grid grid-cols-1 gap-6 mb-6 lg:grid-cols-2 ">
-        <field label="Version" >
+      <div v-else-if="security.selected == 'wpa_e'">
+        <div class="grid grid-cols-1 gap-6 mb-6 lg:grid-cols-2 ">
+          <field label="Version">
             <control
               v-model="security.wpa_e.version"
               :options="selectVersionOptions"
             />
-        </field>
-        <field label="Encryption" help="Select encryption type" >
-          <control
-            v-model="security.wpa_e.encryption"
-            :options="selectEnryptionOptions"
-          />
-        </field>
-      </div>
-      <div class="grid grid-cols-1 gap-6 mb-6 lg:grid-cols-3 ">
-        <field class="col-span-2" label="Radius Server IP" help="The ip address for the radius server. Example: 192.168.23.99">
+          </field>
+          <field
+            label="Encryption"
+            help="Select encryption type"
+          >
+            <control
+              v-model="security.wpa_e.encryption"
+              :options="selectEnryptionOptions"
+            />
+          </field>
+        </div>
+        <div class="grid grid-cols-1 gap-6 mb-6 lg:grid-cols-3 ">
+          <field
+            class="col-span-2"
+            label="Radius Server IP"
+            help="The ip address for the radius server. Example: 192.168.23.99"
+          >
             <control
               v-model="security.wpa_e.ip"
             />
-        </field>
-        <field label="Radius Server Port" help="" >
-          <control
-            v-model="security.wpa_e.port"
-          />
-        </field>
+          </field>
+          <field
+            label="Radius Server Port"
+            help=""
+          >
+            <control
+              v-model="security.wpa_e.port"
+            />
+          </field>
+        </div>
+      </div>
+      <div v-else-if="security.selected == 'wep'">
+        <notification
+          color="warning"
+          :icon="mdiLockOff"
+        >
+          <b>Warning:</b>
+          This security option is highly insecure.
+          WEP can be hacked within minutes. You should not use this option!
+
+          <template #right>
+            <icon :path="mdiAlertCircleOutline" />
+          </template>
+        </notification>
+      </div>
+      <div v-else>
+        <notification
+          color="info"
+          :icion="mdiAlertCircleOutline"
+        >
+          Please select an Security Option!
+          <template #right />
+        </notification>
       </div>
 
-
-    </div>
-    <div v-else-if="security.selected == 'wep'">
-      <notification
-        color="warning"
-        :icon="mdiLockOff"
-      >
-        <b>Warning:</b>
-        This security option is highly insecure.
-        WEP can be hacked within minutes. You should not use this option!
-
-        <template #right>
-          <icon :path="mdiAlertCircleOutline" />
-        </template>
-      </notification>
-    </div>
-    <div v-else>
-      <notification
-        color="info"
-        :icion="mdiAlertCircleOutline" >
-      Please select an Security Option!
-      <template #right></template>
-      </notification>
-    </div>
-
-    <divider />
+      <divider />
 
       <jb-buttons>
         <jb-button
@@ -199,5 +199,5 @@ const submit = () => {
       </jb-buttons>
     </card-component-collapsable>
   </main-section>
-   <bottom-other-pages-section />
+  <bottom-other-pages-section />
 </template>

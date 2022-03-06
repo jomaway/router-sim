@@ -16,7 +16,7 @@ import {
   mdiCheckNetwork,
   mdiNetworkOffOutline,
   mdiAccessPointNetworkOff,
-  mdiCheckNetworkOutline,
+  mdiCheckNetworkOutline
 } from '@mdi/js'
 import * as chartConfig from '@/components/Charts/chart.config.js'
 import LineChart from '@/components/Charts/LineChart.vue'
@@ -44,50 +44,41 @@ const darkMode = computed(() => store.state.darkMode)
 
 const lan = reactive({
   mac: '00-0A-EB-13-09-19',
-  ip: "192.168.188.1", 
-  subnetmask: '255.255.255.0',
+  ip: '192.168.188.1',
+  subnetmask: '255.255.255.0'
 })
 
 const submit = () => {
   // if save button is clicked
-  console.log("save lan settings")
+  console.log('save lan settings')
 }
+
+const allDisabled = true
 
 </script>
 
 <template>
   <title-bar :title-stack="titleStack" />
   <main-section>
-    <notification
-      color="success"
-      :icon="mdiCheckNetworkOutline"
-    >
-      Connected to Network on {{lan.ip}}
-    </notification>
-
     <card-component
       title="Lan Settings"
       :icon="mdiLan"
       form
       @submit.prevent="submit"
     >
-
       <field label="MAC Address:">
-        <control disabled
-          v-model="lan.mac">
-        </control>
+        <control
+          v-model="lan.mac"
+          disabled
+        />
       </field>
-      
-
 
       <field label="Local IP">
-        <control v-model="lan.ip" />
+        <control v-model="lan.ip" :disabled="allDisabled"/>
       </field>
       <field label="Subnetmask">
-        <control v-model="lan.subnetmask" />
+        <control v-model="lan.subnetmask" :disabled="allDisabled"/>
       </field>
-
-
 
       <divider />
 
@@ -96,17 +87,16 @@ const submit = () => {
           type="submit"
           color="info"
           label="Save"
+          :disabled="allDisabled"
         />
         <jb-button
           type="reset"
           color="info"
           outline
           label="Reset"
+          :disabled="allDisabled"
         />
       </jb-buttons>
-
     </card-component>
-
-  	</main-section>
-
+  </main-section>
 </template>

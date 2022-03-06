@@ -1,7 +1,7 @@
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import { useStore } from 'vuex'
-import { mdiBallot, mdiBallotOutline, mdiAccount, mdiMail,mdiWifi, mdiPencil } from '@mdi/js'
+import { mdiBallot, mdiBallotOutline, mdiAccount, mdiMail, mdiWifi, mdiPencil } from '@mdi/js'
 import MainSection from '@/components/MainSection.vue'
 import TitleBar from '@/components/TitleBar.vue'
 import CardComponent from '@/components/CardComponent.vue'
@@ -29,7 +29,7 @@ const selectModeOptions = [
   { id: 3, label: '802.11 ax only' },
   { id: 4, label: '802.11 b/g mixed' },
   { id: 5, label: '802.11 b/g/n mixed' },
-  { id: 6, label: '802.11 b/g/n/ax mixed' },
+  { id: 6, label: '802.11 b/g/n/ax mixed' }
 
 ]
 
@@ -50,7 +50,7 @@ const selectChannelOptions = [
 const selectChannelWidthOptions = [
   { id: 0, label: '20 MHz' },
   { id: 1, label: '40 MHz' },
-  { id: 2, label: '20/40 MHz' },
+  { id: 2, label: '20/40 MHz' }
 ]
 
 const WifiSettingsForm = reactive({
@@ -58,27 +58,26 @@ const WifiSettingsForm = reactive({
   mode: selectModeOptions[store.state.wifi.mode],
   channel: selectChannelOptions[store.state.wifi.channel],
   channel_width: selectChannelWidthOptions[store.state.wifi.channel_width],
-  frequenz: [],
+  frequenz: []
 })
 
-console.log("setup")
+console.log('setup')
 
 if (store.state.wifi.twoPointFourGHz) {
-  WifiSettingsForm.frequenz.push("twopointfour")
+  WifiSettingsForm.frequenz.push('twopointfour')
 }
 if (store.state.wifi.fiveGHz) {
-  WifiSettingsForm.frequenz.push("five")
+  WifiSettingsForm.frequenz.push('five')
 }
-
 
 const submit = () => {
   // If save button is pressed
-  store.commit('wifi', WifiSettingsForm)
-  console.log("Wifi-Settings saved")
+  store.dispatch('saveWifiSettings', WifiSettingsForm)
+  console.log('Wifi-Settings saved')
 }
 
 const updateFreq = (value) => {
-  console.log("update radio checker")
+  console.log('update radio checker')
   console.log(value)
 }
 </script>
@@ -93,49 +92,66 @@ const updateFreq = (value) => {
       form
       @submit.prevent="submit"
     >
-      <field
-        label="Frequenz"
-        help="Select which frequency should be active"
-        wrap-body
-      >
+      <!--
+      <field label="Turn Wifi On/Off">
         <check-radio-picker
-          v-model="WifiSettingsForm.frequenz"
-          name="frequency-checkbox"
-          :options="{ twopointfour: '2,4 GHz', five: '5 GHz' }"
-        />
-      </field>
-      
-      <field 
-        label="Wireless Network Name (SSID)"
-        help="This is also called SSID">
-        <control
-          v-model="WifiSettingsForm.ssid"
-          :icon="mdiPencil"
+          v-model="WifiSettingsForm.switch"
+          name="wifi-enable-switch"
+          type="switch"
+          :options="enableLogo"
         />
       </field>
 
-      <field label="Mode">
-        <control
-          v-model="WifiSettingsForm.mode"
-          :options="selectModeOptions"
-        />
-      </field>
+      <divider />
+    -->
+      <div>
+        <field
+          label="Frequenz"
+          help="Select which frequency should be active. If none is enabled wifi is turned off completely."
+          wrap-body
+        >
+          <check-radio-picker
+            v-model="WifiSettingsForm.frequenz"
+            name="frequency-checkbox"
+            :options="{ twopointfour: '2,4 GHz', five: '5 GHz' }"
+          />
+        </field>
 
-      <div class="grid grid-cols-1 gap-6 mb-6 lg:grid-cols-2 ">
-        <field label="Channel" >
+        <field
+          label="Wireless Network Name (SSID)"
+          help="This is also called SSID"
+        >
+          <control
+            v-model="WifiSettingsForm.ssid"
+            :icon="mdiPencil"
+          />
+        </field>
+
+        <field label="Mode">
+          <control
+            v-model="WifiSettingsForm.mode"
+            :options="selectModeOptions"
+          />
+        </field>
+
+        <div class="grid grid-cols-1 gap-6 mb-6 lg:grid-cols-2 ">
+          <field label="Channel">
             <control
               v-model="WifiSettingsForm.channel"
               :options="selectChannelOptions"
             />
-        </field>
-        <field label="Channel Width" help="Select  channel width" >
-          <control
-            v-model="WifiSettingsForm.channel_width"
-            :options="selectChannelWidthOptions"
-          />
-        </field>
+          </field>
+          <field
+            label="Channel Width"
+            help="Select  channel width"
+          >
+            <control
+              v-model="WifiSettingsForm.channel_width"
+              :options="selectChannelWidthOptions"
+            />
+          </field>
+        </div>
       </div>
-      
 
       <divider />
 

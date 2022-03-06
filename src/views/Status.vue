@@ -1,21 +1,17 @@
 <script setup>
-import { computed, ref, onMounted } from 'vue'
+import { computed, ref, reactive } from 'vue'
 import { useStore } from 'vuex'
 import {
-  mdiAccountMultiple,
-  mdiCartOutline,
-  mdiChartTimelineVariant,
-  mdiFinance,
-  mdiMonitorCellphone,
-  mdiReload,
   mdiGithub,
   mdiChartPie,
   mdiNetwork,
   mdiWifi,
-  mdiLan,
   mdiCheckNetwork,
   mdiNetworkOffOutline,
-  mdiAccessPointNetworkOff
+  mdiAccessPointNetwork,
+  mdiAccessPointNetworkOff,
+  mdiLan,
+  mdiWeb
 } from '@mdi/js'
 import * as chartConfig from '@/components/Charts/chart.config.js'
 import LineChart from '@/components/Charts/LineChart.vue'
@@ -33,65 +29,74 @@ import TitleSubBar from '@/components/TitleSubBar.vue'
 
 const titleStack = ref(['General', 'Status'])
 
-const chartData = ref(null)
-
-const fillChartData = () => {
-  chartData.value = chartConfig.sampleChartData()
-}
-
-onMounted(() => {
-  fillChartData()
-})
 
 const store = useStore()
 
-const clientBarItems = computed(() => store.state.clients.slice(0, 3))
-
-const transactionBarItems = computed(() => store.state.history.slice(0, 3))
-
 const darkMode = computed(() => store.state.darkMode)
+
+const lanStatus = ref('connected')
+const wanStatus = ref('connected')
+const wifiStatus = computed(() => store.state.wifi.twoPointFourGHz || store.state.wifi.fiveGHz)
+
+const status = reactive({
+  wan_ip: store.state.network.wanIp,
+  lan_ip: store.state.network.lanIp,
+})
+
 </script>
 
 <template>
   <title-bar :title-stack="titleStack" />
-  <hero-bar>Status</hero-bar>
   <main-section>
     <notification
       color="success"
-      :icon="mdiNetwork"
+      :icon="mdiCheckNetwork"
     >
-      Connected to Network on 192.168.3.12
+      Connected to the Internet on {{status.wan_ip}}
     </notification>
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-3 mb-6">
       <card-widget
         trend="connected"
-        trend-type="up"
+        trend-type="on"
         color="text-emerald-500"
-        :icon="mdiCheckNetwork"
+        :icon="mdiWeb"
         :number="0"
-        ipv4=" 147.132.24.44"
+        :ipv4="status.wan_ip"
         label="WAN"
+        link="/wan"
       />
       <card-widget
         trend="connected"
-        trend-type="up"
+        trend-type="on"
         color="text-blue-500"
-        :icon="mdiNetwork"
+        :icon="mdiLan"
         :number="0"
-        ipv4="192.168.23.1"
+        :ipv4="status.lan_ip"
         label="LAN"
+        link="/lan"
       />
       <card-widget
+        v-if="!wifiStatus"
         trend="off"
-        trend-type="down"
+        trend-type="off"
         color="text-red-500"
         :icon="mdiAccessPointNetworkOff"
-        :number="256"
-        suffix="%"
+        :number="0"
+        suffix=" clients"
         label="WIFI"
+        link="/wifi-settings"
+      />
+      <card-widget
+        v-else
+        trend="on"
+        trend-type="on"
+        color="text-red-500"
+        :icon="mdiAccessPointNetwork"
+        :number="0"
+        suffix=" clients"
+        label="WIFI"
+        link="/wifi-settings"
       />
     </div>
-
-
   </main-section>
 </template>

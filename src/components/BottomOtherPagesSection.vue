@@ -24,6 +24,5 @@ for (const routeIndex in routes) {
 </script>
 
 <template>
-  <div>
-  </div>
+  <div />
 </template>

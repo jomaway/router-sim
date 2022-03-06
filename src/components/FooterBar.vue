@@ -18,12 +18,12 @@ const isFooterBarVisible = computed(() => !store.state.isFullScreen)
   >
     <level>
       <div class="text-center md:text-left">
-        <b>&copy; {{ year }}, router-sim </b> 
+        <b>&copy; {{ year }}, router-sim </b>
         <p>
           based on <a
-          href="https://justboil.me/"
-          target="_blank"
-        >JustBoil.me</a>
+            href="https://justboil.me/"
+            target="_blank"
+          >JustBoil.me</a>
         </p>
       </div>
       <div class="md:py-2">

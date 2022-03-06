@@ -1,16 +1,11 @@
 import {
-  mdiAccountCircle,
   mdiDesktopMac,
   mdiGithub,
   mdiLock,
   mdiAlertCircle,
   mdiMonitorShimmer,
   mdiSquareEditOutline,
-  mdiTable,
   mdiViewList,
-  mdiTelevisionGuide,
-  mdiResponsive,
-  mdiPalette,
   mdiWifi,
   mdiWeb,
   mdiLan
@@ -23,7 +18,7 @@ export default [
       to: '/status',
       icon: mdiDesktopMac,
       label: 'Status'
-    },
+    }
   ],
   'Network',
   [
@@ -53,18 +48,18 @@ export default [
     {
       to: '/wifi-mac',
       label: 'MAC Filtering',
-      icon: mdiTelevisionGuide
+      icon: mdiViewList
     },
     {
       to: '/wifi-advanced',
       label: 'Advanced',
-      icon: mdiResponsive
+      icon: mdiSquareEditOutline
     },
     {
       to: '/wifi-stats',
       label: 'Statistics',
-      icon: mdiPalette
-    },
+      icon: mdiAlertCircle
+    }
   ],
   'Extra',
   [

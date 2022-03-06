@@ -48,7 +48,7 @@ defineProps({
   },
   link: {
     type: String,
-    default: "/status"
+    default: '/status'
   }
 
 })
@@ -71,7 +71,7 @@ const darkMode = computed(() => store.state.darkMode)
         small
       />
       <jb-button
-        href= link
+        :to="link"
         :icon="mdiCog"
         icon-w="w-4"
         icon-h="h-4"
@@ -87,7 +87,8 @@ const darkMode = computed(() => store.state.darkMode)
         </h3>
         <h1 class="text-3xl leading-tight font-semibold">
           {{ ipv4 }}
-          <growing-number v-if="number != 0"
+          <growing-number
+            v-if="number != 0"
             :value="number"
             :prefix="prefix"
             :suffix="suffix"

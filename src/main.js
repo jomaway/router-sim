@@ -3,14 +3,12 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import { darkModeKey, styleKey } from '@/config.js'
+import { darkModeKey, styleKey, wifiSettingsKey } from '@/config.js'
 
 import './css/main.css'
 
 /* Fetch sample data */
 store.dispatch('fetch', 'macFilters')
-store.dispatch('fetch', 'clients')
-store.dispatch('fetch', 'history')
 
 /* App style */
 store.dispatch('setStyle', localStorage[styleKey] ?? 'basic')
@@ -18,6 +16,12 @@ store.dispatch('setStyle', localStorage[styleKey] ?? 'basic')
 /* Dark mode */
 if ((!localStorage[darkModeKey] && window.matchMedia('(prefers-color-scheme: dark)').matches) || localStorage[darkModeKey] === '1') {
   store.dispatch('darkMode', true)
+}
+
+/* Wifi Settings */
+if (localStorage[wifiSettingsKey]) {
+  console.log('Found local stored wifi settings')
+  store.dispatch('loadWifiSettings', localStorage.getItem(wifiSettingsKey))
 }
 
 /* Default title tag */

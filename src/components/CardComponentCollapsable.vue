@@ -90,7 +90,7 @@ const isExpanded = ref(props.expanded)
         aria-label="more options"
         @click="toggleExpanded"
       >
-        <icon  :path="computedHeaderIcon" />
+        <icon :path="computedHeaderIcon" />
       </button>
     </header>
     <div v-show="isExpanded">

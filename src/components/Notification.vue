@@ -68,7 +68,7 @@ const darkMode = computed(() => store.state.darkMode)
         small
         @click="dismiss"
       />
-      <div v-else></div>
+      <div v-else />
     </level>
   </div>
 </template>

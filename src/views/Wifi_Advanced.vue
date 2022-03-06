@@ -1,6 +1,7 @@
 <script setup>
 import { ref, reactive } from 'vue'
-import { mdiBallot, mdiBallotOutline, mdiAccount, mdiMail,mdiWifi, mdiInformationVariant  } from '@mdi/js'
+import { useStore } from 'vuex'
+import { mdiBallot, mdiBallotOutline, mdiAccount, mdiMail, mdiWifi, mdiInformationVariant } from '@mdi/js'
 import MainSection from '@/components/MainSection.vue'
 import TitleBar from '@/components/TitleBar.vue'
 import CardComponent from '@/components/CardComponent.vue'
@@ -17,8 +18,14 @@ import TitledSection from '@/components/TitledSection.vue'
 import TitleSubBar from '@/components/TitleSubBar.vue'
 import Notification from '@/components/Notification.vue'
 
-const titleStack = ref(['Wireless', 'Settings'])
+const titleStack = ref(['Wireless', 'Advanced'])
 
+const store = useStore()
+
+const WifiAdvancedForm = reactive({
+  broadcast_ssid: true,
+  reduce_tx_power: false
+})
 
 const submit = () => {
   // save settings
@@ -35,14 +42,39 @@ const submit = () => {
       :icon="mdiInformationVariant "
       permanent
     >
-    No advanced settings available.
+      No advanced settings available.
     </notification>
 
-    <card-component>
+    <card-component
+      title="Wifi-Advanced-Settings"
+      :icon="mdiWifi"
+      form
+      @submit.prevent="submit"
+    >
+
+      <field label="Broadcast SSID" help="You can ">
+        <check-radio-picker
+          v-model="WifiAdvancedForm.broadcast_ssid"
+          name="wifi-broadcast-ssid-switch"
+          type="switch"
+          :options="{broadcast:''}"
+        />
+      </field>
+
+      <field label="Reduce antenna transmit power">
+        <check-radio-picker
+          v-model="WifiAdvancedForm.reduce_tx_power"
+          name="wifi-reduce_tx_power-switch"
+          type="switch"
+          :options="{reduce:''}"
+        />
+      </field>
+
       Sendeleistung redizieren!!
+      <p> Wlan abschalten.</p>
+      <p>Gastwlan</p>
     </card-component>
   </main-section>
- 
 
   <bottom-other-pages-section />
 </template>

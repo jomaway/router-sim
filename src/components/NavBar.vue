@@ -83,10 +83,10 @@ const menuOpenLg = () => {
           size="24"
         />
       </nav-bar-item>
-      <!-- search 
+      <!-- search
       <nav-bar-item>
         <nav-bar-search />
-      </nav-bar-item> --> 
+      </nav-bar-item> -->
     </div>
     <div class="flex-none items-stretch flex h-14 lg:hidden">
       <nav-bar-item @click.prevent="menuNavBarToggle">
@@ -104,7 +104,6 @@ const menuOpenLg = () => {
       <div
         class="max-h-screen-menu overflow-y-auto lg:overflow-visible lg:flex lg:items-stretch lg:justify-end lg:ml-auto"
       >
-    
         <nav-bar-item
           has-divider
           is-desktop-icon-only
@@ -117,7 +116,7 @@ const menuOpenLg = () => {
           />
         </nav-bar-item>
         <nav-bar-item
-          href="/help"
+          to="/help"
           has-divider
           is-desktop-icon-only
         >

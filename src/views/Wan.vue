@@ -37,7 +37,6 @@ import Field from '@/components/Field.vue'
 import Control from '@/components/Control.vue'
 import Divider from '@/components/Divider.vue'
 
-
 const titleStack = ref(['Network', 'WAN'])
 
 const store = useStore()
@@ -50,34 +49,30 @@ const darkMode = computed(() => store.state.darkMode)
 
 const selectConnectionTypeOptions = [
   { id: 0, label: 'dynamic IP' },
-  { id: 1, label: 'static IP' },
+  { id: 1, label: 'static IP' }
 ]
 
 const wan = reactive({
   connectionType: selectConnectionTypeOptions[0],
-  ip: "80.18.30.122", 
+  ip: '80.18.30.122',
   subnetmask: '255.252.0.0',
   gateway: '80.10.200.1'
 })
 
-const isStatic = computed(() => wan.connectionType.id == 1 )
+const isStatic = computed(() => wan.connectionType.id == 1)
 
 const submit = () => {
   // if save button is clicked
-  console.log("save wan settings")
+  console.log('save wan settings')
 }
+
+const allDisabled = true
 
 </script>
 
 <template>
   <title-bar :title-stack="titleStack" />
   <main-section>
-    <notification
-      color="success"
-      :icon="mdiCheckNetworkOutline"
-    >
-      Connected to Network on {{wan.ip}}
-    </notification>
 
     <card-component
       title="Wan Settings"
@@ -85,26 +80,29 @@ const submit = () => {
       form
       @submit.prevent="submit"
     >
-      <field label="Wan Connection Type" help="choose dynamic ip if not sure!">
+      <field
+        label="Wan Connection Type"
+        help="choose dynamic ip if not sure!"
+      >
         <control
           v-model="wan.connectionType"
           :options="selectConnectionTypeOptions"
+          :disabled="allDisabled"
         />
       </field>
 
       <div v-if="isStatic">
-        <divider/>
+        <divider />
 
         <field label="Wan IP">
-          <control v-model="wan.ip" />
+          <control v-model="wan.ip" :disabled="allDisabled"/>
         </field>
         <field label="Subnetmask">
-          <control v-model="wan.subnetmask" />
+          <control v-model="wan.subnetmask" :disabled="allDisabled"/>
         </field>
         <field label="Gateway">
-          <control v-model="wan.gateway" />
+          <control v-model="wan.gateway" :disabled="allDisabled"/>
         </field>
-
       </div>
       <div v-else>
         <p> Dynamically connected to ISP on  {{ wan.ip }} </p>
@@ -117,17 +115,16 @@ const submit = () => {
           type="submit"
           color="info"
           label="Save"
+          :disabled="allDisabled"
         />
         <jb-button
           type="reset"
           color="info"
           outline
           label="Reset"
+          :disabled="allDisabled"
         />
       </jb-buttons>
-
     </card-component>
-
-  	</main-section>
-
+  </main-section>
 </template>
