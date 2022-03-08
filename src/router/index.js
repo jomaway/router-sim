@@ -68,6 +68,17 @@ const routes = [
   },
   {
     meta: {
+      title: 'Wifi WPS'
+    },
+    path: '/wifi-wps',
+    name: 'wifi-wps',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "wifi-advanced" */ '@/views/Wifi_WPS.vue')
+  },
+  {
+    meta: {
       title: 'Wifi Statistics'
     },
     path: '/wifi-stats',

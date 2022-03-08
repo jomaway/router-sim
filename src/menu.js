@@ -8,7 +8,8 @@ import {
   mdiViewList,
   mdiWifi,
   mdiWeb,
-  mdiLan
+  mdiLan,
+  mdiCellphoneCog 
 } from '@mdi/js'
 
 export default [
@@ -54,6 +55,11 @@ export default [
       to: '/wifi-advanced',
       label: 'Advanced',
       icon: mdiSquareEditOutline
+    },
+    {
+      to: '/wifi-wps',
+      label: 'WPS',
+      icon: mdiCellphoneCog
     },
     {
       to: '/wifi-stats',

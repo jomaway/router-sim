@@ -9,7 +9,7 @@ export const colorsBg = {
   light: 'bg-gray-100 text-black',
   success: 'bg-emerald-600 text-white',
   danger: 'bg-red-600 text-white',
-  warning: 'bg-yellow-600 text-white',
+  warning: 'bg-amber-400 text-black',
   info: 'bg-blue-600 text-white'
 }
 

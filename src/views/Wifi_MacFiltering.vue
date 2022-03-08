@@ -16,6 +16,8 @@ import Field from '@/components/Field.vue'
 import Divider from '@/components/Divider.vue'
 import JbButtons from '@/components/JbButtons.vue'
 import JbButton from '@/components/JbButton.vue'
+import Divider1 from '@/components/Divider.vue'
+import CardComponentCollapsable from '@/components/CardComponentCollapsable.vue'
 
 const titleStack = ref(['Wireless', 'Mac Filtering'])
 
@@ -32,8 +34,12 @@ if (store.state.wifi.macFilter.enabled) {
 }
 
 const submit = () => {
-  store.commit('enableMacFilter', macFilter)
+  store.dispatch('saveMacFilters', macFilter)
   console.log('Wifi-MacFilter saved')
+}
+
+const add = () => {
+  console.log('Add mac address')
 }
 
 </script>
@@ -110,6 +116,31 @@ const submit = () => {
       </jb-buttons>
     </card-component>
 
+  </main-section>
+
+  <main-section>
+    <card-component-collapsable title="Weitere Infos:" :icon="mdiInformation" expanded>
+
+      <field label="MAC Filtering">
+        <p>Durch Mac Filter kann der Zugriff auf das WLAN durch die Überprüfung der MAC-Adresse eingeschränkt werden.</p>
+        <p><b>Beachte</b> das Hacker auch sehr einfach eine MAC-Adresse fäschen können!</p>
+      </field>
+
+      <field label="Deny-Regel">
+        <p>Bei dieser Regel werden alle eingetragenen MAC-Adressen gesperrt. Geräte mit dieser MAC können sich dann nicht mehr ins WLAN einloggen.</p>
+      </field>
+
+      <field label="Allow-Regel"> 
+        <p>Bei dieser Regel dürfen nur sich nur die Geräte in das WLAN einloggen, deren MAC-Adresse in die Liste eingetragen ist.</p>
+      </field>
+
+      <divider/>
+      <div class="flex ">
+        <icon :path="mdiArrowRight"/>
+        <a class="link text-red-600" href="https://www.elektronik-kompendium.de/sites/net/2109161.htm" target="_blank">WLAN-Hacking: MAC Filter umgehen ... </a>
+      </div>
+      
+    </card-component-collapsable>
   </main-section>
 
   <bottom-other-pages-section />

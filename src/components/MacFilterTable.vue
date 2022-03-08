@@ -176,6 +176,16 @@ const checked = (isChecked, client) => {
     :class="lightBorderStyle"
     class="p-3 lg:px-6 border-t dark:border-gray-800"
   >
+        <jb-button
+          type="submit"
+          color="warning"
+          label="Add new*"
+          disabled
+        />
+        <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+          * Dieser Button funktioniert noch nicht.
+        </div>
+
     <level v-if="numPages > 1">
       <jb-buttons>
         <jb-button

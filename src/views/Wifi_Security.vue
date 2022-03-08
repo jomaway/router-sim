@@ -52,7 +52,7 @@ const security = reactive({
 })
 
 const submit = () => {
-  store.commit('wifi', security)
+  store.dispatch('saveWifiSettings', security)
   console.log('Wifi-Security saved')
 }
 
@@ -82,20 +82,17 @@ const submit = () => {
         <notification
           color="danger"
           :icon="mdiLockOff"
+          permanent
         >
-          <b>Warning:</b>
+          <b>Danger:</b>
           You disabled all wifi-security settings.
           Your network will be open for everyone within reach.
-
-          <template #right>
-            <icon :path="mdiAlertCircleOutline" />
-          </template>
         </notification>
       </div>
 
       <div v-else-if="security.selected == 'wpa_psk'">
         <div class="grid grid-cols-1 gap-6 mb-6 lg:grid-cols-2 ">
-          <field label="Version">
+          <field label="Version" help="WPA sollte nicht mehr verwendet werden. Umso höher die Version umso besser. Allerdings unterstützen noch nicht alle Clients WPA3!">
             <control
               v-model="security.wpa_p.version"
               :options="selectVersionOptions"
@@ -103,7 +100,7 @@ const submit = () => {
           </field>
           <field
             label="Encryption"
-            help="Select encryption type"
+            help="Select encryption type: AES ist moderner und sicherer als TKIP"
           >
             <control
               v-model="security.wpa_p.encryption"
@@ -121,6 +118,14 @@ const submit = () => {
         </field>
       </div>
       <div v-else-if="security.selected == 'wpa_e'">
+        <notification
+          color="info"
+          :icon="mdiAlertCircleOutline"
+          permanent
+        >
+          <b>Info:</b>
+          Ein externer Radius Server ist für diese Einstellung notwendig!
+        </notification>
         <div class="grid grid-cols-1 gap-6 mb-6 lg:grid-cols-2 ">
           <field label="Version">
             <control
@@ -142,7 +147,7 @@ const submit = () => {
           <field
             class="col-span-2"
             label="Radius Server IP"
-            help="The ip address for the radius server. Example: 192.168.23.99"
+            help="Geben Sie hier die IP-Adresse des Radius servers ein."
           >
             <control
               v-model="security.wpa_e.ip"
@@ -150,7 +155,7 @@ const submit = () => {
           </field>
           <field
             label="Radius Server Port"
-            help=""
+            help="Der Standardport ist: 1812"
           >
             <control
               v-model="security.wpa_e.port"
@@ -160,12 +165,12 @@ const submit = () => {
       </div>
       <div v-else-if="security.selected == 'wep'">
         <notification
-          color="warning"
+          color="danger"
           :icon="mdiLockOff"
         >
-          <b>Warning:</b>
+          <b>Danger:</b>
           This security option is highly insecure.
-          WEP can be hacked within minutes. You should not use this option!
+          WEP can be hacked within minutes. Therefore we disabled it!
 
           <template #right>
             <icon :path="mdiAlertCircleOutline" />
@@ -199,5 +204,32 @@ const submit = () => {
       </jb-buttons>
     </card-component-collapsable>
   </main-section>
+
+  <main-section>
+    <card-component-collapsable title="Weitere Infos:" :icon="mdiInformation" expanded>
+
+      <field label="WLAN-Sicherheit">
+        <p>Funksignale bewegen sich im freien Raum. Das bedeutet, jeder der ein Funksignal empfangen kann, kann die gesendeten Funksignale abhören oder manipulieren. Das Abhören einer Funkverbindung kann praktisch nicht verhindert werden. Deshalb müssen WLANs mit Authentifizierung und Verschlüsselung betrieben werden.</p>
+      </field>
+
+      <field label="WLAN-Authentifizierung">
+        <p>Fremde Personen sollten das eigene WLAN nicht nutzen dürfen. Deshalb sollte der Zugriff auf das WLAN mit einem starken Passwort eingeschränkt werden. Das Passwort bekommen dann nur die Personen und Geräte, die Zugriff auf das WLAN haben dürfen. Doch ist das Passwort erst einmal bekannt, dann ist damit der Zugriff ungesichert. Dieses Verfahren nennt man PSK (Pre-Shared-Key).</p>
+        <p>Bei größeren WLANs mit vielen Nutzern und Access Points kann Authentifizierung auch mit eigene Zugangsdaten (Benutzername und Passwort) pro Nutzer eingerichtet werden. An einer zentralen Stelle kann der Zugriff auf einfache Art und Weise freigegeben oder eingeschränkt werden. Dies erfordert doch einen erhöhten administrativen Aufwand.</p>
+      </field>
+
+      <field label="WLAN-Verschlüsselung">
+        <p>Durch die Verschlüsselung soll das Mitlesen der übertragenen Daten verhindert werden. Die Verschlüsselungsstandards (WEP, WPA, WPA2 und WPA3) legen fest wie die Verschlüsselung funktioniert. WEP und WPA sind heutzutage leicht zu knacken und sollten auf keinen Fall verwendet werden.</p>
+        <p>WPA2 (Wifi Protected Access 2) wurde 2004 eingeführt und war lange Zeit der sicherste Standard und gilt auch heute noch als relativ sicher. Jedoch hat auch WPA2 einige Schwachstellen. Deshalb wurde 2018 der Nachfolger WPA3 vorgestellt. Dieser gilt als der aktuelle und sicherste Verschlüsselungsstandard. Leider unterstützen immer noch nicht alle Geräte diesen Standard, so das oft auf WPA2 zurückgegriffen werden muss.</p>
+      </field>
+
+      <divider/>
+      <div class="flex ">
+        <icon :path="mdiArrowRight"/>
+        <a class="link text-red-600" href="https://www.elektronik-kompendium.de/sites/net/1403011.htm" target="_blank"> Weitere Infos hier</a>
+      </div>
+      
+    </card-component-collapsable>
+  </main-section>
+
   <bottom-other-pages-section />
 </template>

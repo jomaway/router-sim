@@ -73,6 +73,7 @@ const isExpanded = ref(props.expanded)
       v-if="title"
       :class="lightBorderStyle"
       class="flex items-stretch border-b dark:border-gray-800"
+      @click="toggleExpanded"
     >
       <p
         class="flex items-center py-3 grow font-bold"

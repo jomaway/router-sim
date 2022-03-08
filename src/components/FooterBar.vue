@@ -26,9 +26,6 @@ const isFooterBarVisible = computed(() => !store.state.isFullScreen)
           >JustBoil.me</a>
         </p>
       </div>
-      <div class="md:py-2">
-        router-sim
-      </div>
     </level>
   </footer>
 </template>

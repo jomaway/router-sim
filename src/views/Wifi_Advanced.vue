@@ -17,18 +17,24 @@ import BottomOtherPagesSection from '@/components/BottomOtherPagesSection.vue'
 import TitledSection from '@/components/TitledSection.vue'
 import TitleSubBar from '@/components/TitleSubBar.vue'
 import Notification from '@/components/Notification.vue'
+import ToggleSwitch from '@/components/ToggleSwitch.vue'
 
 const titleStack = ref(['Wireless', 'Advanced'])
 
 const store = useStore()
 
 const WifiAdvancedForm = reactive({
-  broadcast_ssid: true,
-  reduce_tx_power: false
+  broadcast_ssid: store.state.wifi.broadcast_ssid,
+  reduce_tx_power: store.state.wifi.reduce_tx_power,
+  turn_off: {
+    from: store.state.wifi.turn_off.from,
+    till: store.state.wifi.turn_off.till
+  }
 })
 
 const submit = () => {
-  // save settings
+  store.dispatch('saveWifiAdvancedSettings', WifiAdvancedForm)
+  console.log("Wifi Advanced Settings saved")
 }
 
 </script>
@@ -37,13 +43,7 @@ const submit = () => {
   <title-bar :title-stack="titleStack" />
 
   <main-section>
-    <notification
-      color="info"
-      :icon="mdiInformationVariant "
-      permanent
-    >
-      No advanced settings available.
-    </notification>
+
 
     <card-component
       title="Wifi-Advanced-Settings"
@@ -52,27 +52,47 @@ const submit = () => {
       @submit.prevent="submit"
     >
 
-      <field label="Broadcast SSID" help="You can ">
-        <check-radio-picker
+      <field label="Broadcast SSID" help="Wenn diese Option aktiviert ist, taucht die SSID nicht in der Liste der verfügbaren WLANs auf.">
+        <toggle-switch
           v-model="WifiAdvancedForm.broadcast_ssid"
           name="wifi-broadcast-ssid-switch"
-          type="switch"
-          :options="{broadcast:''}"
         />
       </field>
 
-      <field label="Reduce antenna transmit power">
-        <check-radio-picker
+      <field label="Reduce antenna transmit power" help="Diese Option schränkt die Sendeleistung und damit die Reichweite des WLANs ein.">
+        <toggle-switch
           v-model="WifiAdvancedForm.reduce_tx_power"
           name="wifi-reduce_tx_power-switch"
-          type="switch"
-          :options="{reduce:''}"
         />
       </field>
 
-      Sendeleistung redizieren!!
-      <p> Wlan abschalten.</p>
-      <p>Gastwlan</p>
+      <divider/>
+
+      <field label="Scheduler" help="WLAN zeitgesteuert ausschalten.">
+        <div class="flex gap-2 items-center">
+          <span class="col-span-2 text-center ">WLAN ausschalten von </span>
+          <control v-model="WifiAdvancedForm.turn_off.from"/>
+          <span > bis </span>
+          <control v-model="WifiAdvancedForm.turn_off.till"/>
+          <span> Uhr. </span>
+        </div>
+      </field>
+
+      <divider/>
+
+      <jb-buttons>
+        <jb-button
+          type="submit"
+          color="info"
+          label="Save"
+        />
+        <jb-button
+          type="reset"
+          color="info"
+          outline
+          label="Reset"
+        />
+      </jb-buttons>
     </card-component>
   </main-section>
 

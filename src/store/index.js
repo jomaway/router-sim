@@ -61,7 +61,7 @@ export default createStore({
     wifi: {
       ssid: '',
       mode: 0, // 11 b only
-      channel: 10, // auto
+      channel: 0, // auto
       channel_width: 2, // 20/40MHz
       twoPointFourGHz: false,
       fiveGHz: false,
@@ -82,7 +82,14 @@ export default createStore({
       macFilter: {
         enabled: false,
         rule: 'deny'
-      }
+      },
+      broadcast_ssid: true,
+      reduce_tx_power: false,
+      turn_off: {
+        from: '',
+        till: ''
+      },
+      wps_enabled: false
     }
   },
   mutations: {
@@ -152,15 +159,39 @@ export default createStore({
         state.wifi.security_enterprise.radius.port = payload.wpa_e.port
         console.log('wpa-enterprise settings saved ', state.wifi.security_enterprise)
       }
+      if (payload.broadcast_ssid) {
+        state.wifi.broadcast_ssid = payload.broadcast_ssid
+        console.log("changed broadcast_ssid", state.wifi.broadcast_ssid)
+      }
+      if (payload.reduce_tx_power) {
+        state.wifi.reduce_tx_power = payload.reduce_tx_power
+      }
+      if (payload.turn_off) {
+        state.wifi.turn_off.from = payload.turn_off.from
+        state.wifi.turn_off.till = payload.turn_off.till
+      }
       console.log('All wifi-Settings stored')
     },
 
+    wifiAdvanced(state, payload) {
+      state.wifi.broadcast_ssid = payload.broadcast_ssid
+      state.wifi.reduce_tx_power = payload.reduce_tx_power
+      if (payload.turn_off) {
+        state.wifi.turn_off.from = payload.turn_off.from
+        state.wifi.turn_off.till = payload.turn_off.till
+      }
+      console.log('Wifi advanced settings stored')
+    },
+
     enableMacFilter(state, payload) {
-      state.wifi.macFilter.enabled = () => payload.enabled == 'enabled' ? true : false
+      state.wifi.macFilter.enabled = payload.enabled == 'enabled' ? true : false
       state.wifi.macFilter.rule = payload.rule ?? 'deny'
       console.log('macFilter settings stored ', state.wifi.macFilter)
+    },
+    wps(state,payload) {
+      state.wifi.wps_enabled = payload.wps_enabled
+      console.log('wps status stored ', state.wifi.wps_enabled)
     }
-
 
   },
   actions: {
@@ -237,7 +268,19 @@ export default createStore({
     saveWifiSettings ({ commit, state}, payload) {
       commit('wifi', payload)
       localStorage.setItem(wifiSettingsKey,  JSON.stringify(state.wifi)) 
-    }
+    },
+    saveMacFilters ({ commit, state}, payload) {
+      commit('enableMacFilter', payload)
+      localStorage.setItem(wifiSettingsKey,  JSON.stringify(state.wifi)) 
+    },
+    saveWifiAdvancedSettings ({ commit, state}, payload) {
+      commit('wifiAdvanced', payload)
+      localStorage.setItem(wifiSettingsKey,  JSON.stringify(state.wifi)) 
+    },
+    saveWPSSettings ({ commit, state}, payload) {
+      commit('wps', payload)
+      localStorage.setItem(wifiSettingsKey,  JSON.stringify(state.wifi)) 
+    },
   },
   modules: {
   }
