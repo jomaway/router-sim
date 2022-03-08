@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import TitleBar from '@/components/TitleBar.vue'
 import TitledSection from '@/components/TitledSection.vue'
 import MainSection from '@/components/MainSection.vue'
@@ -8,7 +8,7 @@ import VuePdfEmbed from 'vue-pdf-embed'
 
 const titleStack = ref(['General', 'Help'])
 
-const pdf_source = 'data-sources/Router-Sim.pdf'
+const pdfSource = 'data-sources/Router-Sim.pdf'
 </script>
 
 <template>
@@ -19,7 +19,7 @@ const pdf_source = 'data-sources/Router-Sim.pdf'
   </titled-section>
 
   <main-section>
-    <vue-pdf-embed :source="pdf_source" />
+    <vue-pdf-embed :source="pdfSource" />
   </main-section>
 
   <titled-section first>
@@ -27,8 +27,8 @@ const pdf_source = 'data-sources/Router-Sim.pdf'
   </titled-section>
 
   <main-section>
-    <div class="flex mx-auto w-1/4">
-    <p><b>Melden</b> und <b>Fragen</b>!</p>
+    <div class="flex justify-center">
+      <p><b>Melden</b> und <b>Fragen</b>!</p>
     </div>
   </main-section>
 

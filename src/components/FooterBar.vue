@@ -2,7 +2,6 @@
 import { computed } from 'vue'
 import { useStore } from 'vuex'
 import Level from '@/components/Level.vue'
-import JbLogo from '@/components/JbLogo.vue'
 
 const store = useStore()
 

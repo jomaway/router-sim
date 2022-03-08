@@ -1,7 +1,7 @@
 <script setup>
 import { computed, useSlots } from 'vue'
 
-defineProps({
+const props = defineProps({
   label: {
     type: String,
     default: null
@@ -9,6 +9,10 @@ defineProps({
   help: {
     type: String,
     default: null
+  },
+  noWrap: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -17,6 +21,10 @@ const slots = useSlots()
 const wrapperClass = computed(() => {
   const base = []
   const slotsLength = slots.default().length
+
+  if (props.noWrap) {
+    return base
+  }
 
   if (slotsLength > 1) {
     base.push('grid grid-cols-1 gap-3')

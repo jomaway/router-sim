@@ -9,7 +9,7 @@ import {
   mdiWifi,
   mdiWeb,
   mdiLan,
-  mdiCellphoneCog 
+  mdiCellphoneCog
 } from '@mdi/js'
 
 export default [

@@ -44,8 +44,6 @@ export default createStore({
 
     /* Sample data (commonly used) */
     macFilters: [],
-    clients: [],
-    history: [],
 
     // network settings
     network: {
@@ -53,10 +51,11 @@ export default createStore({
       wanIp: '80.12.123.32',
       wanMask: '255.0.0.0',
       wanStatus: 'connected',
-      wanGateway: '80.10.1.1',
-      lanIp: '192.168.188.1',
-      lanMask: '255.255.255.0',
-      lanStatus: 'connected'
+      wanGateway: '80.10.200.1',
+      lanIp: '10.13.200.30',
+      lanMask: '255.255.252.0',
+      lanStatus: 'connected',
+      lanMAC: 'B8-27-EB-66-21-11'
     },
     wifi: {
       ssid: '',
@@ -89,7 +88,11 @@ export default createStore({
         from: '',
         till: ''
       },
-      wps_enabled: false
+      wps_enabled: true,
+      wps_pin: 23529323
+    },
+    checks: {
+      done: false
     }
   },
   mutations: {
@@ -146,13 +149,13 @@ export default createStore({
         state.wifi.security_mode = payload.selected
         console.log('Selected security mode is ', state.wifi.security_mode)
       }
-      if (payload.wpa_p && state.wifi.security_mode == 'wpa_psk') {
+      if (payload.wpa_p && state.wifi.security_mode === 'psk') {
         state.wifi.security_psk.version = payload.wpa_p.version.id
         state.wifi.security_psk.encryption = payload.wpa_p.encryption.id
         state.wifi.security_psk.pw = payload.wpa_p.pw
         console.log('wpa_psk settings saved ', state.wifi.security_psk)
       }
-      if (payload.wpa_e && state.wifi.security_mode == 'wpa_e') {
+      if (payload.wpa_e && state.wifi.security_mode === 'enterprise') {
         state.wifi.security_enterprise.version = payload.wpa_e.version.id
         state.wifi.security_enterprise.encryption = payload.wpa_e.encryption.id
         state.wifi.security_enterprise.radius.ip = payload.wpa_e.ip
@@ -161,7 +164,7 @@ export default createStore({
       }
       if (payload.broadcast_ssid) {
         state.wifi.broadcast_ssid = payload.broadcast_ssid
-        console.log("changed broadcast_ssid", state.wifi.broadcast_ssid)
+        console.log('changed broadcast_ssid', state.wifi.broadcast_ssid)
       }
       if (payload.reduce_tx_power) {
         state.wifi.reduce_tx_power = payload.reduce_tx_power
@@ -173,7 +176,7 @@ export default createStore({
       console.log('All wifi-Settings stored')
     },
 
-    wifiAdvanced(state, payload) {
+    wifiAdvanced (state, payload) {
       state.wifi.broadcast_ssid = payload.broadcast_ssid
       state.wifi.reduce_tx_power = payload.reduce_tx_power
       if (payload.turn_off) {
@@ -183,14 +186,19 @@ export default createStore({
       console.log('Wifi advanced settings stored')
     },
 
-    enableMacFilter(state, payload) {
-      state.wifi.macFilter.enabled = payload.enabled == 'enabled' ? true : false
+    enableMacFilter (state, payload) {
+      state.wifi.macFilter.enabled = payload.enabled === 'enabled'
       state.wifi.macFilter.rule = payload.rule ?? 'deny'
       console.log('macFilter settings stored ', state.wifi.macFilter)
     },
-    wps(state,payload) {
+    wps (state, payload) {
       state.wifi.wps_enabled = payload.wps_enabled
+      state.wifi.wps_pin = payload.wps_pin
       console.log('wps status stored ', state.wifi.wps_enabled)
+    },
+    runChecks (state) {
+      state.checks.done = true
+      console.log('running checks ..')
     }
 
   },
@@ -260,27 +268,27 @@ export default createStore({
         })
     },
 
-    loadWifiSettings ({state}, payload) {
-      console.log("try to load Wifi Settings from", JSON.parse(payload))
+    loadWifiSettings ({ state }, payload) {
+      console.log('try to load Wifi Settings from', JSON.parse(payload))
       state.wifi = JSON.parse(payload)
     },
 
-    saveWifiSettings ({ commit, state}, payload) {
+    saveWifiSettings ({ commit, state }, payload) {
       commit('wifi', payload)
-      localStorage.setItem(wifiSettingsKey,  JSON.stringify(state.wifi)) 
+      localStorage.setItem(wifiSettingsKey, JSON.stringify(state.wifi))
     },
-    saveMacFilters ({ commit, state}, payload) {
+    saveMacFilters ({ commit, state }, payload) {
       commit('enableMacFilter', payload)
-      localStorage.setItem(wifiSettingsKey,  JSON.stringify(state.wifi)) 
+      localStorage.setItem(wifiSettingsKey, JSON.stringify(state.wifi))
     },
-    saveWifiAdvancedSettings ({ commit, state}, payload) {
+    saveWifiAdvancedSettings ({ commit, state }, payload) {
       commit('wifiAdvanced', payload)
-      localStorage.setItem(wifiSettingsKey,  JSON.stringify(state.wifi)) 
+      localStorage.setItem(wifiSettingsKey, JSON.stringify(state.wifi))
     },
-    saveWPSSettings ({ commit, state}, payload) {
+    saveWPSSettings ({ commit, state }, payload) {
       commit('wps', payload)
-      localStorage.setItem(wifiSettingsKey,  JSON.stringify(state.wifi)) 
-    },
+      localStorage.setItem(wifiSettingsKey, JSON.stringify(state.wifi))
+    }
   },
   modules: {
   }

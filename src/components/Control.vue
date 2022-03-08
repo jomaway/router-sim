@@ -40,7 +40,8 @@ const props = defineProps({
   borderless: Boolean,
   transparent: Boolean,
   ctrlKFocus: Boolean,
-  disabled: Boolean
+  disabled: Boolean,
+  wrongInput: Boolean
 })
 
 const emit = defineEmits(['update:modelValue', 'right-icon-click'])
@@ -59,7 +60,8 @@ const inputElClass = computed(() => {
     computedType.value === 'textarea' ? 'h-24' : 'h-12',
     props.borderless ? 'border-0' : 'border',
     props.transparent ? 'bg-transparent' : 'bg-white dark:bg-gray-800',
-    props.disabled ? 'disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none' : ''
+    props.disabled ? 'disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none' : '',
+    props.wrongInput ? 'border-red-600' : ''
   ]
 
   if (props.icon) {

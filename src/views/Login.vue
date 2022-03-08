@@ -4,7 +4,6 @@ import { useRouter } from 'vue-router'
 import { mdiAccount, mdiAsterisk } from '@mdi/js'
 import FullScreenSection from '@/components/FullScreenSection.vue'
 import CardComponent from '@/components/CardComponent.vue'
-import CheckRadioPicker from '@/components/CheckRadioPicker.vue'
 import Field from '@/components/Field.vue'
 import Control from '@/components/Control.vue'
 import Divider from '@/components/Divider.vue'
@@ -13,14 +12,20 @@ import JbButtons from '@/components/JbButtons.vue'
 
 const form = reactive({
   login: 'Administrator',
-  pass: 'highly-secure-password-fYjUw-',
-  remember: ['remember']
+  pass: '',
+  remember: ['remember'],
+  tries: 0
 })
 
 const router = useRouter()
 
 const submit = () => {
-  router.push('/status')
+  if (form.pass === 'routeradmin') {
+    router.push('/status')
+  } else {
+    console.log('wrong password')
+    form.tries += 1
+  }
 }
 </script>
 
@@ -44,6 +49,7 @@ const submit = () => {
           :icon="mdiAccount"
           name="login"
           autocomplete="username"
+          disabled
         />
       </field>
 
@@ -51,20 +57,23 @@ const submit = () => {
         label="Password"
         help="Please enter your password"
       >
-        <control
-          v-model="form.pass"
-          :icon="mdiAsterisk"
-          type="password"
-          name="password"
-          autocomplete="current-password"
-        />
+        <div class="flex flex-col">
+          <p
+            v-if="form.tries > 0"
+            class="text-red-600"
+          >
+            Invalid Password!
+          </p>
+          <control
+            v-model="form.pass"
+            :icon="mdiAsterisk"
+            type="password"
+            name="password"
+            autocomplete="current-password"
+            :wrong-input="form.tries > 0"
+          />
+        </div>
       </field>
-
-      <check-radio-picker
-        v-model="form.remember"
-        name="remember"
-        :options="{ remember: 'Remember' }"
-      />
 
       <divider />
 
@@ -73,12 +82,6 @@ const submit = () => {
           type="submit"
           color="info"
           label="Login"
-        />
-        <jb-button
-          to="/dashboard"
-          color="info"
-          outline
-          label="Back"
         />
       </jb-buttons>
     </card-component>

@@ -7,24 +7,13 @@ import {
   mdiClose,
   mdiDotsVertical,
   mdiMenu,
-  mdiClockOutline,
-  mdiCloud,
-  mdiCrop,
-  mdiAccount,
-  mdiCogOutline,
-  mdiEmail,
   mdiLogout,
-  mdiGithub,
   mdiThemeLightDark,
   mdiHelpCircleOutline
 } from '@mdi/js'
 import NavBarItem from '@/components/NavBarItem.vue'
 import NavBarItemLabel from '@/components/NavBarItemLabel.vue'
-import NavBarMenu from '@/components/NavBarMenu.vue'
-import Divider from '@/components/Divider.vue'
-import UserAvatar from '@/components/UserAvatar.vue'
 import Icon from '@/components/Icon.vue'
-import NavBarSearch from '@/components/NavBarSearch.vue'
 
 const store = useStore()
 
@@ -37,8 +26,6 @@ const toggleLightDark = () => {
 const isNavBarVisible = computed(() => !store.state.isFullScreen)
 
 const isAsideMobileExpanded = computed(() => store.state.isAsideMobileExpanded)
-
-const userName = computed(() => store.state.userName)
 
 const menuToggleMobileIcon = computed(() => isAsideMobileExpanded.value ? mdiBackburger : mdiForwardburger)
 

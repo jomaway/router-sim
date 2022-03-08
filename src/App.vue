@@ -24,7 +24,7 @@ const overlayClick = () => {
 <template>
   <nav-bar />
   <aside-menu :menu="menu" />
-    <router-view/>
+  <router-view />
   <footer-bar />
   <overlay
     v-show="isAsideLgActive"

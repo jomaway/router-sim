@@ -1,13 +1,12 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
-import { mdiEye, mdiTrashCan } from '@mdi/js'
+import { mdiTrashCan } from '@mdi/js'
 import ModalBox from '@/components/ModalBox.vue'
 import CheckboxCell from '@/components/CheckboxCell.vue'
 import Level from '@/components/Level.vue'
 import JbButtons from '@/components/JbButtons.vue'
 import JbButton from '@/components/JbButton.vue'
-import UserAvatar from '@/components/UserAvatar.vue'
 
 defineProps({
   checkable: Boolean
@@ -176,15 +175,15 @@ const checked = (isChecked, client) => {
     :class="lightBorderStyle"
     class="p-3 lg:px-6 border-t dark:border-gray-800"
   >
-        <jb-button
-          type="submit"
-          color="warning"
-          label="Add new*"
-          disabled
-        />
-        <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-          * Dieser Button funktioniert noch nicht.
-        </div>
+    <jb-button
+      type="submit"
+      color="warning"
+      label="Add new*"
+      disabled
+    />
+    <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+      * Dieser Button funktioniert noch nicht.
+    </div>
 
     <level v-if="numPages > 1">
       <jb-buttons>

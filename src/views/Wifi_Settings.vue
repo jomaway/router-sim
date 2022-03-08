@@ -1,65 +1,25 @@
 <script setup>
 import { ref, reactive, computed } from 'vue'
 import { useStore } from 'vuex'
-import { mdiArrowRight, mdiWifi, mdiPencil, mdiInformation, mdiArrowDownThick  } from '@mdi/js'
+import { mdiArrowRight, mdiWifi, mdiPencil, mdiInformation, mdiArrowDownThick } from '@mdi/js'
 import MainSection from '@/components/MainSection.vue'
 import TitleBar from '@/components/TitleBar.vue'
 import CardComponent from '@/components/CardComponent.vue'
 import CheckRadioPicker from '@/components/CheckRadioPicker.vue'
-import FilePicker from '@/components/FilePicker.vue'
-import HeroBar from '@/components/HeroBar.vue'
 import Field from '@/components/Field.vue'
 import Control from '@/components/Control.vue'
 import Divider from '@/components/Divider.vue'
 import JbButton from '@/components/JbButton.vue'
 import JbButtons from '@/components/JbButtons.vue'
-import BottomOtherPagesSection from '@/components/BottomOtherPagesSection.vue'
-import TitledSection from '@/components/TitledSection.vue'
-import TitleSubBar from '@/components/TitleSubBar.vue'
 import CardComponentCollapsable from '@/components/CardComponentCollapsable.vue'
 import Icon from '@/components/Icon.vue'
 import Notification from '@/components/Notification.vue'
+import ModalBox from '@/components/ModalBox.vue'
+import { selectModeOptions, selectChannelOptions, selectChannelWidthOptions } from '@/config'
 
 const titleStack = ref(['Wireless', 'Settings'])
 
 const store = useStore()
-
-const selectModeOptions = [
-  { id: 0, label: '802.11 b only' },
-  { id: 1, label: '802.11 g only' },
-  { id: 2, label: '802.11 a only' },
-  { id: 3, label: '802.11 ac only' },
-  { id: 4, label: '802.11 n only' },
-  { id: 5, label: '802.11 ax only' },
-  { id: 6, label: '802.11 b/g/n mixed' },
-  { id: 7, label: '802.11 a/n/ac mixed' },
-  { id: 8, label: '802.11 b/g/n + a/ac mixed' },
-  { id: 9, label: '802.11 n/ax mixed' },
-  { id: 10, label: '802.11 n/ac/ax mixed' },
-]
-
-const selectChannelOptions = [
-  { id: 0, label: 'auto' },
-  { id: 1, label: '1' },
-  { id: 2, label: '2' },
-  { id: 3, label: '3' },
-  { id: 4, label: '4' },
-  { id: 5, label: '5' },
-  { id: 6, label: '6' },
-  { id: 7, label: '7' },
-  { id: 8, label: '8' },
-  { id: 9, label: '9' },
-  { id: 10, label: '10' },
-  { id: 11, label: '11' },
-  { id: 12, label: '12' },
-  { id: 13, label: '13' }
-]
-
-const selectChannelWidthOptions = [
-  { id: 0, label: '20 MHz' },
-  { id: 1, label: '40 MHz' },
-  { id: 2, label: '20/40 MHz' }
-]
 
 const WifiSettingsForm = reactive({
   ssid: store.state.wifi.ssid,
@@ -78,19 +38,34 @@ if (store.state.wifi.fiveGHz) {
   WifiSettingsForm.frequenz.push('five')
 }
 
+const wifiEnabled = computed(() => WifiSettingsForm.frequenz.length)
+
+const isSaveModalActive = ref(false)
+
+const emptySSIDcheck = ref(false)
+
 const submit = () => {
   // If save button is pressed
-  store.dispatch('saveWifiSettings', WifiSettingsForm)
-  console.log('Wifi-Settings saved')
+  if (WifiSettingsForm.ssid === '' && wifiEnabled.value) {
+    emptySSIDcheck.value = true
+  } else {
+    emptySSIDcheck.value = false
+    store.dispatch('saveWifiSettings', WifiSettingsForm)
+    console.log('Wifi-Settings saved')
+    isSaveModalActive.value = true
+  }
 }
 
-const updateFreq = (value) => {
-  console.log('update radio checker')
-  console.log(value)
-}
 </script>
 
 <template>
+  <modal-box
+    v-model="isSaveModalActive"
+    title="Wifi Settings Saved"
+  >
+    <p>Wifi-Settings saved. Go to Statistics to check your Wifi-Status </p>
+  </modal-box>
+
   <title-bar :title-stack="titleStack" />
 
   <main-section>
@@ -107,18 +82,6 @@ const updateFreq = (value) => {
       form
       @submit.prevent="submit"
     >
-      <!--
-      <field label="Turn Wifi On/Off">
-        <check-radio-picker
-          v-model="WifiSettingsForm.switch"
-          name="wifi-enable-switch"
-          type="switch"
-          :options="enableLogo"
-        />
-      </field>
-
-      <divider />
-    -->
       <div>
         <field
           label="Frequenz"
@@ -132,39 +95,63 @@ const updateFreq = (value) => {
           />
         </field>
 
-        <field
-          label="Wireless Network Name (SSID)"
-          help="Der Name eines Netzwerks wird auch SSID genannt. Nutzen Sie keinen Namen der Rückschlüsse auf private Informationen zulässt."
-        >
-          <control
-            v-model="WifiSettingsForm.ssid"
-            :icon="mdiPencil"
-          />
-        </field>
+        <div v-if="!wifiEnabled">
+          <p>⬆ Wähle eine Frequenz um das WLAN für diese zu aktivieren </p>
+        </div>
 
-        <field label="Mode" help="Der Modus legt fest welcher Standard genutzt wird. Falls möglich nutzen Sie einen aktuellen Standard. Ältere Standards sollten Sie nur nutzen falls Clients nur diese unterstützen.">
-          <control
-            v-model="WifiSettingsForm.mode"
-            :options="selectModeOptions"
-          />
-        </field>
-
-        <div class="grid grid-cols-1 gap-6 mb-6 lg:grid-cols-2 ">
-          <field label="Channel" help="Lassen Sie dies Funktion am besten auf auto, wenn sie sich nicht sicher sind. Weitere Informationen unter Infos">
-            <control
-              v-model="WifiSettingsForm.channel"
-              :options="selectChannelOptions"
-            />
-          </field>
+        <div v-show="wifiEnabled">
           <field
-            label="Channel Width"
-            help="Hier können Sie die Kanalbreite festlegen. 20/40 MHz legt die Breite automatisch fest"
+            label="Wireless Network Name (SSID)"
+            help="Der Name eines Netzwerks wird auch SSID genannt. Nutzen Sie keinen Namen der Rückschlüsse auf private Informationen zulässt."
+          >
+            <div class="flex flex-col">
+              <p
+                v-if="emptySSIDcheck"
+                class="text-red-600"
+              >
+                SSID can't be empty!
+              </p>
+              <control
+                v-model="WifiSettingsForm.ssid"
+                :icon="mdiPencil"
+                :wrong-input="emptySSIDcheck"
+              />
+            </div>
+          </field>
+
+          <field
+            label="Mode"
+            help="Der Modus legt fest welcher Standard genutzt wird. Falls möglich nutzen Sie einen aktuellen Standard. Ältere Standards sollten Sie nur nutzen falls Clients nur diese unterstützen."
           >
             <control
-              v-model="WifiSettingsForm.channel_width"
-              :options="selectChannelWidthOptions"
+              v-model="WifiSettingsForm.mode"
+              :options="selectModeOptions"
             />
+            <p class="text-red-600">
+              ⬅ <b>Überprüfen</b> Sie in der Tabelle am Ende der Seite, welchen Modus Sie wählen müssen um Wifi-4 und Wifi-5 fähige Geräte zu unterstützen.
+            </p>
           </field>
+
+          <div class="grid grid-cols-1 gap-6 mb-6 lg:grid-cols-2 ">
+            <field
+              label="Channel"
+              help="Lassen Sie dies Funktion am besten auf auto, wenn sie sich nicht sicher sind. Weitere Informationen unter Infos"
+            >
+              <control
+                v-model="WifiSettingsForm.channel"
+                :options="selectChannelOptions"
+              />
+            </field>
+            <field
+              label="Channel Width"
+              help="Hier können Sie die Kanalbreite festlegen. 20/40 MHz legt die Breite automatisch fest"
+            >
+              <control
+                v-model="WifiSettingsForm.channel_width"
+                :options="selectChannelWidthOptions"
+              />
+            </field>
+          </div>
         </div>
       </div>
 
@@ -176,19 +163,17 @@ const updateFreq = (value) => {
           color="info"
           label="Save"
         />
-        <jb-button
-          type="reset"
-          color="info"
-          outline
-          label="Reset"
-        />
       </jb-buttons>
     </card-component>
   </main-section>
 
   <main-section>
-    <card-component-collapsable title="Weitere Infos:" :icon="mdiInformation" expanded>
-
+    <card-component-collapsable
+      title="Weitere Infos:"
+      :icon="mdiInformation"
+      expanded
+      class="bg-gray-200"
+    >
       <field label="Modus (engl. Mode):">
         <p>Der Modus gibt an welche WLAN-Standards unterstützt werden.</p>
         <p>Ein WLAN-Standard gibt Auskunft über genutzte Frequenzbereiche, Geschwindigkeit und weitere technische Umsetzungen des WLANs. Um die kryptischen Bezeichnungen nach den IEEE 802.11 Projektgruppen zu vereinfachen, haben die Standards nun fortlaufende Nummern. Die Zuordnung sehen Sie in folgender Tabelle</p>
@@ -245,12 +230,15 @@ const updateFreq = (value) => {
         <p>Im 2,4-GHz-Frequenzband existieren insgesamt 79 schmalbandige Kanäle, die in Kanäle mit je 5 MHz zusammengefasst sind. In Europa gibt es 13, in den USA 11 und in Japan 14 solcher Kanäle. Diese Kanäle sind allerdings eng aneinandergereiht und überlappen sich. Deshalb kann man nicht alle der 11, 13 oder 14 Kanäle verwenden, sondern je nach Kanal-Verteilung nur 3 oder 4. Und das bei einer Kanalbreite von 20 MHz. Bei einer Kanalbreite von 40 MHz würde sich die Anzahl parallel nutzbarer Kanäle halbieren.</p>
       </field>
 
-      <divider/>
+      <divider />
       <div class="flex ">
-        <icon :path="mdiArrowRight"/>
-        <a class="link text-red-600" href="https://www.elektronik-kompendium.de/sites/net/1712061.htm" target="_blank"> Weitere Infos hier</a>
+        <icon :path="mdiArrowRight" />
+        <a
+          class="link text-red-600"
+          href="https://www.elektronik-kompendium.de/sites/net/1712061.htm"
+          target="_blank"
+        > Weitere Infos hier</a>
       </div>
-      
     </card-component-collapsable>
   </main-section>
 </template>

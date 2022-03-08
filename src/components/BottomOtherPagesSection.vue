@@ -1,8 +1,6 @@
 <script setup>
+// ts-check
 import { useRouter } from 'vue-router'
-import { mdiGithub } from '@mdi/js'
-import TitledSection from '@/components/TitledSection.vue'
-import Icon from '@/components/Icon.vue'
 
 const router = useRouter()
 

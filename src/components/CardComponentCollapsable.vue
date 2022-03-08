@@ -1,5 +1,5 @@
 <script setup>
-import { mdiCog, mdiChevronDown, mdiChevronUp } from '@mdi/js'
+import { mdiChevronDown, mdiChevronUp } from '@mdi/js'
 import { useStore } from 'vuex'
 import { computed, ref } from 'vue'
 import Icon from '@/components/Icon.vue'
@@ -89,7 +89,6 @@ const isExpanded = ref(props.expanded)
       <button
         class="flex items-center py-3 px-4 justify-center ring-blue-700 focus:ring"
         aria-label="more options"
-        @click="toggleExpanded"
       >
         <icon :path="computedHeaderIcon" />
       </button>

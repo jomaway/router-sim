@@ -1,23 +1,21 @@
 <script setup>
-import { ref, reactive,computed } from 'vue'
+import { ref, reactive } from 'vue'
 import { useStore } from 'vuex'
-import { mdiMonitorCellphone, mdiFilterOutline, mdiTableBorder, mdiTableOff } from '@mdi/js'
+import { mdiFilterOutline, mdiInformation, mdiArrowRight } from '@mdi/js'
 import MainSection from '@/components/MainSection.vue'
 import Notification from '@/components/Notification.vue'
-import ClientsTable from '@/components/ClientsTable.vue'
 import CardComponent from '@/components/CardComponent.vue'
 import TitleBar from '@/components/TitleBar.vue'
-import HeroBar from '@/components/HeroBar.vue'
 import BottomOtherPagesSection from '@/components/BottomOtherPagesSection.vue'
-import TitleSubBar from '@/components/TitleSubBar.vue'
 import MacFilterTable from '@/components/MacFilterTable.vue'
 import CheckRadioPicker from '@/components/CheckRadioPicker.vue'
 import Field from '@/components/Field.vue'
 import Divider from '@/components/Divider.vue'
 import JbButtons from '@/components/JbButtons.vue'
 import JbButton from '@/components/JbButton.vue'
-import Divider1 from '@/components/Divider.vue'
 import CardComponentCollapsable from '@/components/CardComponentCollapsable.vue'
+import Icon from '@/components/Icon.vue'
+import ModalBox from '@/components/ModalBox.vue'
 
 const titleStack = ref(['Wireless', 'Mac Filtering'])
 
@@ -36,15 +34,20 @@ if (store.state.wifi.macFilter.enabled) {
 const submit = () => {
   store.dispatch('saveMacFilters', macFilter)
   console.log('Wifi-MacFilter saved')
+  isSaveModalActive.value = true
 }
 
-const add = () => {
-  console.log('Add mac address')
-}
+const isSaveModalActive = ref(false)
 
 </script>
 
 <template>
+  <modal-box
+    v-model="isSaveModalActive"
+    title="MAC-Filter Settings Saved"
+  >
+    <p>MAC-Filter Settings saved. Go to Statistics to check your Wifi-Status </p>
+  </modal-box>
   <title-bar :title-stack="titleStack" />
   <main-section>
     <notification
@@ -107,22 +110,20 @@ const add = () => {
           color="info"
           label="Save"
         />
-        <jb-button
-          type="reset"
-          color="info"
-          outline
-          label="Reset"
-        />
       </jb-buttons>
     </card-component>
-
   </main-section>
 
   <main-section>
-    <card-component-collapsable title="Weitere Infos:" :icon="mdiInformation" expanded>
-
+    <card-component-collapsable
+      title="Weitere Infos:"
+      :icon="mdiInformation"
+      expanded
+      class="bg-gray-200"
+    >
       <field label="MAC Filtering">
         <p>Durch Mac Filter kann der Zugriff auf das WLAN durch die Überprüfung der MAC-Adresse eingeschränkt werden.</p>
+        <p />
         <p><b>Beachte</b> das Hacker auch sehr einfach eine MAC-Adresse fäschen können!</p>
       </field>
 
@@ -130,16 +131,19 @@ const add = () => {
         <p>Bei dieser Regel werden alle eingetragenen MAC-Adressen gesperrt. Geräte mit dieser MAC können sich dann nicht mehr ins WLAN einloggen.</p>
       </field>
 
-      <field label="Allow-Regel"> 
+      <field label="Allow-Regel">
         <p>Bei dieser Regel dürfen nur sich nur die Geräte in das WLAN einloggen, deren MAC-Adresse in die Liste eingetragen ist.</p>
       </field>
 
-      <divider/>
+      <divider />
       <div class="flex ">
-        <icon :path="mdiArrowRight"/>
-        <a class="link text-red-600" href="https://www.elektronik-kompendium.de/sites/net/2109161.htm" target="_blank">WLAN-Hacking: MAC Filter umgehen ... </a>
+        <icon :path="mdiArrowRight" />
+        <a
+          class="link text-red-600"
+          href="https://www.elektronik-kompendium.de/sites/net/2109161.htm"
+          target="_blank"
+        >WLAN-Hacking: MAC Filter umgehen ... </a>
       </div>
-      
     </card-component-collapsable>
   </main-section>
 

@@ -4,7 +4,7 @@ import { computed } from 'vue'
 const props = defineProps({
   labels: {
     type: Object,
-    default: { on: '', off: ''}
+    default: () => { return { on: '', off: '' } }
   },
   name: {
     type: String,
