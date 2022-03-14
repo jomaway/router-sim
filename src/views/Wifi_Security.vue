@@ -43,6 +43,8 @@ const submit = () => {
 
 const isSaveModalActive = ref(false)
 
+const allDisabled = ref(store.state.checks.done)
+
 </script>
 
 <template>
@@ -67,6 +69,7 @@ const isSaveModalActive = ref(false)
         name="selected-security-option"
         type="radio"
         :options="securityModeOptions"
+        :disabled="allDisabled"
       />
 
       <divider />
@@ -92,6 +95,7 @@ const isSaveModalActive = ref(false)
             <control
               v-model="security.wpa_p.version"
               :options="securityVersionOptions"
+              :disabled="allDisabled"
             />
           </field>
           <field
@@ -101,6 +105,7 @@ const isSaveModalActive = ref(false)
             <control
               v-model="security.wpa_p.encryption"
               :options="securityEncryptionOptions"
+              :disabled="allDisabled"
             />
           </field>
         </div>
@@ -110,6 +115,7 @@ const isSaveModalActive = ref(false)
         >
           <control
             v-model="security.wpa_p.pw"
+            :disabled="allDisabled"
           />
         </field>
       </div>
@@ -127,6 +133,7 @@ const isSaveModalActive = ref(false)
             <control
               v-model="security.wpa_e.version"
               :options="securityVersionOptions"
+              :disabled="allDisabled"
             />
           </field>
           <field
@@ -136,6 +143,7 @@ const isSaveModalActive = ref(false)
             <control
               v-model="security.wpa_e.encryption"
               :options="securityEncryptionOptions"
+              :disabled="allDisabled"
             />
           </field>
         </div>
@@ -147,6 +155,7 @@ const isSaveModalActive = ref(false)
           >
             <control
               v-model="security.wpa_e.ip"
+              :disabled="allDisabled"
             />
           </field>
           <field
@@ -155,6 +164,7 @@ const isSaveModalActive = ref(false)
           >
             <control
               v-model="security.wpa_e.port"
+              :disabled="allDisabled"
             />
           </field>
         </div>
@@ -163,14 +173,11 @@ const isSaveModalActive = ref(false)
         <notification
           color="danger"
           :icon="mdiLockOff"
+          permanent
         >
           <b>Danger:</b>
           This security option is highly insecure.
           WEP can be hacked within minutes.
-
-          <template #right>
-            <icon :path="mdiAlertCircleOutline" />
-          </template>
         </notification>
       </div>
       <div v-else>
@@ -190,6 +197,7 @@ const isSaveModalActive = ref(false)
           type="submit"
           color="info"
           label="Save"
+          :disabled="allDisabled"
         />
       </jb-buttons>
     </card-component-collapsable>

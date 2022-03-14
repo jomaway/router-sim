@@ -53,3 +53,93 @@ export const securityVersionOptions = [
 ]
 
 export const securityModeOptions = { disabled: 'Disable Security', psk: 'PSK', enterprise: 'Enterprise', wep: 'WEP' }
+
+export const getDefaultState = () => {
+  return {
+    /* Styles */
+    lightBorderStyle: '',
+    lightBgStyle: '',
+    asideStyle: '',
+    asideBrandStyle: '',
+    asideMenuCloseLgStyle: '',
+    asideMenuLabelStyle: '',
+    asideMenuItemStyle: '',
+    asideMenuItemActiveStyle: '',
+    asideMenuItemInactiveStyle: '',
+    asideSubmenuListStyle: '',
+    navBarItemLabelStyle: '',
+    navBarItemLabelHoverStyle: '',
+    navBarItemLabelActiveColorStyle: '',
+    navBarMenuListUpperLabelStyle: '',
+    tableTrStyle: '',
+    tableTrOddStyle: '',
+    overlayStyle: '',
+
+    /* fullScreen - fullscreen form layout (e.g. login page) */
+    isFullScreen: true,
+
+    /* Aside */
+    isAsideMobileExpanded: false,
+    isAsideLgActive: false,
+
+    /* Dark mode */
+    darkMode: false,
+
+    /* Field focus with ctrl+k (to register only once) */
+    isFieldFocusRegistered: false,
+
+    /* Sample data (commonly used) */
+    macFilters: [],
+
+    // network settings
+    network: {
+      wanType: 0,
+      wanIp: '80.12.123.32',
+      wanMask: '255.0.0.0',
+      wanStatus: 'connected',
+      wanGateway: '80.10.200.1',
+      lanIp: '10.13.200.30',
+      lanMask: '255.255.252.0',
+      lanStatus: 'connected',
+      lanMAC: 'B8-27-EB-66-21-11'
+    },
+    wifi: {
+      ssid: '',
+      mode: 0, // 11 b only
+      channel: 0, // auto
+      channel_width: 2, // 20/40MHz
+      twoPointFourGHz: false,
+      fiveGHz: false,
+      security_mode: 'disabled',
+      security_psk: {
+        version: 0, // wpa
+        encryption: 0, // tkip
+        pw: ''
+      },
+      security_enterprise: {
+        version: 0, // wpa
+        encryption: 0, // tkip
+        radius: {
+          ip: '',
+          port: '1812'
+        }
+      },
+      macFilter: {
+        enabled: false,
+        rule: 'deny'
+      },
+      broadcast_ssid: true,
+      reduce_tx_power: false,
+      turn_off: {
+        from: '',
+        till: ''
+      },
+      wps_enabled: true,
+      wps_pin: 23529323
+    },
+    checks: {
+      running: false, // not used yet
+      done: false
+    }
+  }
+}

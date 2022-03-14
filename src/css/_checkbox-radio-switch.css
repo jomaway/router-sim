@@ -2,6 +2,8 @@
   @apply inline-flex items-center cursor-pointer relative;
 }
 
+
+
 .checkbox input[type=checkbox], .radio input[type=radio], .switch input[type=checkbox] {
   @apply absolute left-0 opacity-0 -z-1;
 }
@@ -58,4 +60,8 @@
 
 .checkbox .control-label, .radio .control-label, .switch .control-label {
   @apply pl-2;
+}
+
+.checkbox input[disabled]+.check{
+  @apply bg-slate-50 text-slate-500 border-slate-200 shadow-none opacity-50 
 }

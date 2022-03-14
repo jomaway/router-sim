@@ -36,6 +36,8 @@ function genNewPin () {
 const isModalActive = ref(false)
 const isSaveModalActive = ref(false)
 
+const allDisabled = ref(store.state.checks.done)
+
 </script>
 
 <template>
@@ -72,6 +74,7 @@ const isSaveModalActive = ref(false)
               v-model="WifiWPSForm.wps_enabled"
               name="wifi-wps-switch"
               :labels="{ on: 'enabled', off: 'disabled' }"
+              :disabled="allDisabled"
             />
           </field>
 
@@ -86,6 +89,7 @@ const isSaveModalActive = ref(false)
                 color="warning"
                 label="Add new Device"
                 small
+                :disabled="allDisabled"
                 @click="isModalActive = true"
               />
             </field>
@@ -104,6 +108,7 @@ const isSaveModalActive = ref(false)
                   color="warning"
                   label="Generate new PIN"
                   small
+                  :disabled="allDisabled"
                   @click="genNewPin()"
                 />
               </div>

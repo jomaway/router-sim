@@ -28,7 +28,7 @@ import JbButtons from '@/components/JbButtons.vue'
       <jb-buttons>
         <jb-button
           label="Done"
-          to="/dashboard"
+          to="/status"
           color="danger"
         />
       </jb-buttons>

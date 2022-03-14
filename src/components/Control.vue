@@ -121,6 +121,7 @@ if (props.ctrlKFocus) {
       v-model="computedValue"
       :name="name"
       :class="inputElClass"
+      :disabled="disabled"
     >
       <option
         v-for="option in options"

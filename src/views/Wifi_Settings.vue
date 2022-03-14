@@ -56,6 +56,8 @@ const submit = () => {
   }
 }
 
+const allDisabled = ref(store.state.checks.done)
+
 </script>
 
 <template>
@@ -92,6 +94,8 @@ const submit = () => {
             v-model="WifiSettingsForm.frequenz"
             name="frequency-checkbox"
             :options="{ twopointfour: '2,4 GHz', five: '5 GHz' }"
+            :disabled="allDisabled"
+            column
           />
         </field>
 
@@ -115,6 +119,7 @@ const submit = () => {
                 v-model="WifiSettingsForm.ssid"
                 :icon="mdiPencil"
                 :wrong-input="emptySSIDcheck"
+                :disabled="allDisabled"
               />
             </div>
           </field>
@@ -126,6 +131,7 @@ const submit = () => {
             <control
               v-model="WifiSettingsForm.mode"
               :options="selectModeOptions"
+              :disabled="allDisabled"
             />
             <p class="text-red-600">
               ⬅ <b>Überprüfen</b> Sie in der Tabelle am Ende der Seite, welchen Modus Sie wählen müssen um Wifi-4 und Wifi-5 fähige Geräte zu unterstützen.
@@ -140,6 +146,7 @@ const submit = () => {
               <control
                 v-model="WifiSettingsForm.channel"
                 :options="selectChannelOptions"
+                :disabled="allDisabled"
               />
             </field>
             <field
@@ -149,6 +156,7 @@ const submit = () => {
               <control
                 v-model="WifiSettingsForm.channel_width"
                 :options="selectChannelWidthOptions"
+                :disabled="allDisabled"
               />
             </field>
           </div>
@@ -162,6 +170,7 @@ const submit = () => {
           type="submit"
           color="info"
           label="Save"
+          :disabled="allDisabled"
         />
       </jb-buttons>
     </card-component>

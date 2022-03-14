@@ -15,6 +15,7 @@ const props = defineProps({
     default: 'checkbox'
   },
   column: Boolean,
+  disabled: Boolean,
   modelValue: {
     type: [Object, Array, String, Number],
     default: null
@@ -31,6 +32,7 @@ const computedValue = computed({
 })
 
 const inputType = computed(() => props.type === 'radio' ? 'radio' : 'checkbox')
+
 </script>
 
 <template>
@@ -49,6 +51,7 @@ const inputType = computed(() => props.type === 'radio' ? 'radio' : 'checkbox')
         :type="inputType"
         :name="name"
         :value="key"
+        :disabled="disabled"
       >
       <span class="check" />
       <span class="control-label">{{ value }}</span>

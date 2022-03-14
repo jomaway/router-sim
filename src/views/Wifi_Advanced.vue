@@ -34,6 +34,7 @@ const submit = () => {
 }
 
 const isSaveModalActive = ref(false)
+const allDisabled = ref(store.state.checks.done)
 
 </script>
 
@@ -60,6 +61,7 @@ const isSaveModalActive = ref(false)
         <toggle-switch
           v-model="WifiAdvancedForm.broadcast_ssid"
           name="wifi-broadcast-ssid-switch"
+          :disabled="allDisabled"
         />
       </field>
 
@@ -70,6 +72,7 @@ const isSaveModalActive = ref(false)
         <toggle-switch
           v-model="WifiAdvancedForm.reduce_tx_power"
           name="wifi-reduce_tx_power-switch"
+          :disabled="allDisabled"
         />
       </field>
 
@@ -81,9 +84,15 @@ const isSaveModalActive = ref(false)
       >
         <div class="flex gap-2 items-center">
           <span class="col-span-2 text-center ">WLAN ausschalten von </span>
-          <control v-model="WifiAdvancedForm.turn_off.from" />
+          <control
+            v-model="WifiAdvancedForm.turn_off.from"
+            :disabled="allDisabled"
+          />
           <span> bis </span>
-          <control v-model="WifiAdvancedForm.turn_off.till" />
+          <control
+            v-model="WifiAdvancedForm.turn_off.till"
+            :disabled="allDisabled"
+          />
           <span> Uhr. </span>
         </div>
       </field>
@@ -95,6 +104,7 @@ const isSaveModalActive = ref(false)
           type="submit"
           color="info"
           label="Save"
+          :disabled="allDisabled"
         />
       </jb-buttons>
     </card-component>

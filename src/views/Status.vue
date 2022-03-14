@@ -81,6 +81,11 @@ function loadSettings (value) {
 }
 
 const isLoadModalActive = ref(false)
+const isResetModalActive = ref(false)
+
+const resetRouter = () => {
+  store.dispatch('reset')
+}
 
 </script>
 
@@ -94,6 +99,17 @@ const isLoadModalActive = ref(false)
     @confirm="loadSettings"
   >
     <file-picker v-model="settingsFile" />
+  </modal-box>
+  <modal-box
+    v-model="isResetModalActive"
+    button-label="Reset"
+    button="danger"
+    title="Reset Settings"
+    has-cancel
+    @confirm="resetRouter"
+  >
+    <p>This will reset all Wireless Settings</p>
+    <p>Are you sure?</p>
   </modal-box>
 
   <title-bar :title-stack="titleStack" />
@@ -161,6 +177,13 @@ const isLoadModalActive = ref(false)
           label="Load Settings"
           small
           @click="isLoadModalActive = true"
+        />
+        <jb-button
+          color="danger"
+          label="Reset"
+          outline
+          small
+          @click="isResetModalActive = true"
         />
       </jb-buttons>
     </card-component>

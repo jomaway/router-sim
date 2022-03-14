@@ -132,6 +132,22 @@ const routes = [
     path: '/error',
     name: 'error',
     component: () => import(/* webpackChunkName: "error" */ '@/views/Error.vue')
+  },
+  {
+    meta: {
+      title: 'Extra'
+    },
+    path: '/extra-diff',
+    name: 'extradiff',
+    component: () => import(/* webpackChunkName: "error" */ '@/views/Extra_Diff.vue')
+  },
+  {
+    meta: {
+      title: 'Checks'
+    },
+    path: '/extra-checks',
+    name: 'extrachecks',
+    component: () => import(/* webpackChunkName: "error" */ '@/views/Extra_Checks.vue')
   }
 ]
 

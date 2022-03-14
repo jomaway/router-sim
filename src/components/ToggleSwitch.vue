@@ -11,6 +11,7 @@ const props = defineProps({
     required: true
   },
   column: Boolean,
+  disabled: Boolean,
   modelValue: {
     type: Boolean,
     default: false
@@ -43,6 +44,7 @@ const inputType = computed(() => props.type === 'radio' ? 'radio' : 'checkbox')
         v-model="computedValue"
         :type="inputType"
         :name="name"
+        :disabled="disabled"
       >
       <span class="check" />
       <span class="control-label">{{ computedLabel }}</span>

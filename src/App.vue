@@ -9,11 +9,6 @@ import Overlay from '@/components/Overlay.vue'
 
 const store = useStore()
 
-store.commit('user', {
-  name: 'Administrator',
-  avatar: 'https://avatars.dicebear.com/api/avataaars/example.svg?options[top][]=shortHair&options[accessoriesChance]=93'
-})
-
 const isAsideLgActive = computed(() => store.state.isAsideLgActive)
 
 const overlayClick = () => {

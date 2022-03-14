@@ -1,7 +1,8 @@
 import { createStore } from 'vuex'
 import axios from 'axios'
-import { darkModeKey, styleKey, wifiSettingsKey } from '@/config.js'
+import { darkModeKey, getDefaultState, styleKey, wifiSettingsKey } from '@/config.js'
 import * as styles from '@/styles.js'
+import router from '@/router'
 
 export default createStore({
   state: {
@@ -23,11 +24,6 @@ export default createStore({
     tableTrStyle: '',
     tableTrOddStyle: '',
     overlayStyle: '',
-
-    /* User */
-    userName: null,
-    userEmail: null,
-    userAvatar: null,
 
     /* fullScreen - fullscreen form layout (e.g. login page) */
     isFullScreen: true,
@@ -92,6 +88,7 @@ export default createStore({
       wps_pin: 23529323
     },
     checks: {
+      running: false, // not used yet
       done: false
     }
   },
@@ -112,18 +109,6 @@ export default createStore({
       }
     },
 
-    /* User */
-    user (state, payload) {
-      if (payload.name) {
-        state.userName = payload.name
-      }
-      if (payload.email) {
-        state.userEmail = payload.email
-      }
-      if (payload.avatar) {
-        state.userAvatar = payload.avatar
-      }
-    },
     /* Wifi */
     wifi (state, payload) {
       if (payload.ssid) {
@@ -196,9 +181,12 @@ export default createStore({
       state.wifi.wps_pin = payload.wps_pin
       console.log('wps status stored ', state.wifi.wps_enabled)
     },
-    runChecks (state) {
-      state.checks.done = true
-      console.log('running checks ..')
+    runChecks (state, payload) {
+      state.checks.done = payload
+      console.log('running checks ..', payload)
+    },
+    resetState (state) {
+      Object.assign(state, getDefaultState())
     }
 
   },
@@ -288,6 +276,12 @@ export default createStore({
     saveWPSSettings ({ commit, state }, payload) {
       commit('wps', payload)
       localStorage.setItem(wifiSettingsKey, JSON.stringify(state.wifi))
+    },
+    reset ({ commit }) {
+      console.log('Reset store to default settings')
+      commit('resetState')
+      localStorage.removeItem(wifiSettingsKey)
+      router.go()
     }
   },
   modules: {

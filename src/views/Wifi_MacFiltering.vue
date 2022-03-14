@@ -39,6 +39,8 @@ const submit = () => {
 
 const isSaveModalActive = ref(false)
 
+const allDisabled = ref(store.state.checks.done)
+
 </script>
 
 <template>
@@ -70,6 +72,7 @@ const isSaveModalActive = ref(false)
           name="global_mac_filtering_status"
           type="radio"
           :options="{ disabled : 'Disable', enabled: 'Enable' }"
+          :disabled="allDisabled"
         />
       </field>
 
@@ -85,6 +88,7 @@ const isSaveModalActive = ref(false)
             name="global_mac_filter_rule"
             type="radio"
             :options="{ deny : 'Deny all listed devices', allow: 'Allow only listed devices' }"
+            :disabled="allDisabled"
           />
         </field>
       </div>
@@ -109,6 +113,7 @@ const isSaveModalActive = ref(false)
           type="submit"
           color="info"
           label="Save"
+          :disabled="allDisabled"
         />
       </jb-buttons>
     </card-component>

@@ -60,7 +60,7 @@ const checksDone = computed(() => store.state.checks.done)
 const runChecks = () => {
   console.log('starting checks ...', checks.code)
   if (checks.code === '23985') {
-    store.commit('runChecks')
+    store.commit('runChecks', true)
   } else {
     checks.wrongCode = true
   }

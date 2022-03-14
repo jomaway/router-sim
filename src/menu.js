@@ -1,15 +1,14 @@
 import {
   mdiDesktopMac,
-  mdiGithub,
   mdiLock,
   mdiAlertCircle,
-  mdiMonitorShimmer,
   mdiSquareEditOutline,
   mdiViewList,
   mdiWifi,
   mdiWeb,
   mdiLan,
-  mdiCellphoneCog
+  mdiCellphoneCog,
+  mdiRunFast
 } from '@mdi/js'
 
 export default [
@@ -70,16 +69,14 @@ export default [
   'Extra',
   [
     {
-      href: '',
-      label: 'About',
-      icon: mdiMonitorShimmer,
-      target: '_blank'
+      to: '/extra-diff',
+      label: 'extra',
+      icon: mdiRunFast
     },
     {
-      href: '',
-      label: 'GitHub',
-      icon: mdiGithub,
-      target: '_blank'
+      to: '/extra-checks',
+      label: 'checks',
+      icon: mdiRunFast
     }
   ]
 ]
