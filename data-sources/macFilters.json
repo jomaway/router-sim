@@ -1,0 +1,20 @@
+{
+    "data": [
+        {
+            "id": 1,
+            "mac": "00-00-5e-00-53-af",
+            "status": "blocked",
+            "description": "Tom's phone",
+            "created": "Mar 3, 2021",
+            "created_mm_dd_yyyy": "03-03-2021"
+        },
+        {
+            "id": 2,
+            "mac": "EC-17-2F-F0-32-14",
+            "status": "blocked",
+            "description": "Tom's laptop",
+            "created": "Mar 3, 2021",
+            "created_mm_dd_yyyy": "03-03-2021"
+        }
+    ]
+}
