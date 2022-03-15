@@ -7,7 +7,7 @@ import {
   mdiAccessPointNetwork,
   mdiAccessPointNetworkOff,
   mdiLan,
-  mdiWeb,
+  mdiWan,
   mdiHumanGreeting,
   mdiArrowLeftThick,
   mdiArrowTopRight,
@@ -125,7 +125,7 @@ const resetRouter = () => {
         :trend="wanStatus"
         trend-type="on"
         color="text-emerald-500"
-        :icon="mdiWeb"
+        :icon="mdiWan"
         :number="0"
         :ipv4="status.wan_ip"
         label="WAN"

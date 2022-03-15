@@ -5,7 +5,7 @@ import {
   mdiSquareEditOutline,
   mdiViewList,
   mdiWifi,
-  mdiWeb,
+  mdiWan,
   mdiLan,
   mdiCellphoneCog,
   mdiRunFast
@@ -24,7 +24,7 @@ export default [
   [
     {
       to: '/wan',
-      icon: mdiWeb,
+      icon: mdiWan,
       label: 'Wan'
     },
     {

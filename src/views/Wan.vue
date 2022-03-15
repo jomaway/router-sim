@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref, reactive } from 'vue'
-import { mdiWeb } from '@mdi/js'
+import { mdiWan } from '@mdi/js'
 import MainSection from '@/components/MainSection.vue'
 import TitleBar from '@/components/TitleBar.vue'
 import CardComponent from '@/components/CardComponent.vue'
@@ -43,7 +43,7 @@ const allDisabled = true
   <main-section>
     <card-component
       title="Wan Settings"
-      :icon="mdiWeb"
+      :icon="mdiWan"
       form
       @submit.prevent="submit"
     >
