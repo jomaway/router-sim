@@ -120,7 +120,6 @@ const allDisabled = ref(store.state.checks.done)
               label="Save"
             />
           </jb-buttons>
-
         </div>
 
         <div class="bg-gray-200 p-4 rounded">
@@ -149,7 +148,6 @@ const allDisabled = ref(store.state.checks.done)
           <p>Das Problem bei dieser Methode ist, dass die meisten Access-Points einen statischen WPS-Pin vergeben. Das heißt der Pin ändert sich nie. Dadurch lässt sich in 3 – 10 Stunden durch reines Ausprobieren der Pin herausfinden und ein Zugang zum WLAN herstellen.</p>
         </div>
       </div>
-
     </card-component>
   </main-section>
 

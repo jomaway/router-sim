@@ -47,7 +47,6 @@ const allDisabled = ref(store.state.checks.done)
 </script>
 
 <template>
-
   <title-bar :title-stack="titleStack" />
 
   <main-section>
