@@ -1,6 +1,7 @@
 <script setup>
 import { ref, reactive } from 'vue'
 import { useStore } from 'vuex'
+import { useToast } from 'vue-toastification'
 import { mdiWifi } from '@mdi/js'
 import MainSection from '@/components/MainSection.vue'
 import TitleBar from '@/components/TitleBar.vue'
@@ -16,6 +17,7 @@ import ModalBox from '@/components/ModalBox.vue'
 const titleStack = ref(['Wireless', 'WPS'])
 
 const store = useStore()
+const toast = useToast()
 
 const WifiWPSForm = reactive({
   wps_enabled: store.state.wifi.wps_enabled,
@@ -25,16 +27,16 @@ const WifiWPSForm = reactive({
 const submit = () => {
   store.dispatch('saveWPSSettings', WifiWPSForm)
   console.log('Wifi Advanced Settings saved')
-  isSaveModalActive.value = true
+  toast.success('WPS settings saved')
 }
 
 function genNewPin () {
   WifiWPSForm.wps_pin = Math.floor(10000000 + Math.random() * 90000000)
   console.log('new wps pin is', WifiWPSForm.wps_pin)
+  toast.info('New WPS-PIN generated', { timeout: 1000 })
 }
 
 const isModalActive = ref(false)
-const isSaveModalActive = ref(false)
 
 const allDisabled = ref(store.state.checks.done)
 
@@ -47,12 +49,6 @@ const allDisabled = ref(store.state.checks.done)
   >
     <p>This is just an simulation.</p>
     <p>In real life you can now connect your Device via WPS.</p>
-  </modal-box>
-  <modal-box
-    v-model="isSaveModalActive"
-    title="WPS Settings Saved"
-  >
-    <p>WPS-Settings saved. Go to Statistics to check your Wifi-Status</p>
   </modal-box>
 
   <title-bar :title-stack="titleStack" />
@@ -114,6 +110,17 @@ const allDisabled = ref(store.state.checks.done)
               </div>
             </field>
           </div>
+
+          <divider />
+
+          <jb-buttons>
+            <jb-button
+              type="submit"
+              color="info"
+              label="Save"
+            />
+          </jb-buttons>
+
         </div>
 
         <div class="bg-gray-200 p-4 rounded">
@@ -143,15 +150,6 @@ const allDisabled = ref(store.state.checks.done)
         </div>
       </div>
 
-      <divider />
-
-      <jb-buttons>
-        <jb-button
-          type="submit"
-          color="info"
-          label="Save"
-        />
-      </jb-buttons>
     </card-component>
   </main-section>
 

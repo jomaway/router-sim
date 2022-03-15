@@ -1,6 +1,7 @@
 <script setup>
 import { ref, reactive, computed } from 'vue'
 import { useStore } from 'vuex'
+import { useToast } from 'vue-toastification'
 import { mdiArrowRight, mdiWifi, mdiPencil, mdiInformation, mdiArrowDownThick } from '@mdi/js'
 import MainSection from '@/components/MainSection.vue'
 import TitleBar from '@/components/TitleBar.vue'
@@ -14,12 +15,13 @@ import JbButtons from '@/components/JbButtons.vue'
 import CardComponentCollapsable from '@/components/CardComponentCollapsable.vue'
 import Icon from '@/components/Icon.vue'
 import Notification from '@/components/Notification.vue'
-import ModalBox from '@/components/ModalBox.vue'
 import { selectModeOptions, selectChannelOptions, selectChannelWidthOptions } from '@/config'
 
 const titleStack = ref(['Wireless', 'Settings'])
 
 const store = useStore()
+
+const toast = useToast()
 
 const WifiSettingsForm = reactive({
   ssid: store.state.wifi.ssid,
@@ -40,19 +42,18 @@ if (store.state.wifi.fiveGHz) {
 
 const wifiEnabled = computed(() => WifiSettingsForm.frequenz.length)
 
-const isSaveModalActive = ref(false)
-
 const emptySSIDcheck = ref(false)
 
 const submit = () => {
   // If save button is pressed
   if (WifiSettingsForm.ssid === '' && wifiEnabled.value) {
     emptySSIDcheck.value = true
+    toast.error('SSID can not be empty')
   } else {
     emptySSIDcheck.value = false
     store.dispatch('saveWifiSettings', WifiSettingsForm)
     console.log('Wifi-Settings saved')
-    isSaveModalActive.value = true
+    toast.success('Settings saved')
   }
 }
 
@@ -61,13 +62,6 @@ const allDisabled = ref(store.state.checks.done)
 </script>
 
 <template>
-  <modal-box
-    v-model="isSaveModalActive"
-    title="Wifi Settings Saved"
-  >
-    <p>Wifi-Settings saved. Go to Statistics to check your Wifi-Status </p>
-  </modal-box>
-
   <title-bar :title-stack="titleStack" />
 
   <main-section>

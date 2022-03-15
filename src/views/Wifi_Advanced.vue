@@ -1,6 +1,7 @@
 <script setup>
 import { ref, reactive } from 'vue'
 import { useStore } from 'vuex'
+import { useToast } from 'vue-toastification'
 import { mdiWifi } from '@mdi/js'
 import MainSection from '@/components/MainSection.vue'
 import TitleBar from '@/components/TitleBar.vue'
@@ -12,11 +13,11 @@ import JbButton from '@/components/JbButton.vue'
 import JbButtons from '@/components/JbButtons.vue'
 import BottomOtherPagesSection from '@/components/BottomOtherPagesSection.vue'
 import ToggleSwitch from '@/components/ToggleSwitch.vue'
-import ModalBox from '@/components/ModalBox.vue'
 
 const titleStack = ref(['Wireless', 'Advanced'])
 
 const store = useStore()
+const toast = useToast()
 
 const WifiAdvancedForm = reactive({
   broadcast_ssid: store.state.wifi.broadcast_ssid,
@@ -30,21 +31,14 @@ const WifiAdvancedForm = reactive({
 const submit = () => {
   store.dispatch('saveWifiAdvancedSettings', WifiAdvancedForm)
   console.log('Wifi Advanced Settings saved')
-  isSaveModalActive.value = true
+  toast.success('Advanced settings saved')
 }
 
-const isSaveModalActive = ref(false)
 const allDisabled = ref(store.state.checks.done)
 
 </script>
 
 <template>
-  <modal-box
-    v-model="isSaveModalActive"
-    title="Wifi-Advanced Settings Saved"
-  >
-    <p> Wifi Advanced Settings saved. Go to Statistics to check your Wifi-Status </p>
-  </modal-box>
   <title-bar :title-stack="titleStack" />
 
   <main-section>

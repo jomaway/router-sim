@@ -1,6 +1,7 @@
 <script setup>
 import { ref, reactive } from 'vue'
 import { useStore } from 'vuex'
+import { useToast } from 'vue-toastification'
 import { mdiWifi, mdiLockOff, mdiAlertCircleOutline, mdiInformation, mdiArrowRight } from '@mdi/js'
 import MainSection from '@/components/MainSection.vue'
 import TitleBar from '@/components/TitleBar.vue'
@@ -14,11 +15,11 @@ import BottomOtherPagesSection from '@/components/BottomOtherPagesSection.vue'
 import CardComponentCollapsable from '@/components/CardComponentCollapsable.vue'
 import Notification from '@/components/Notification.vue'
 import Icon from '@/components/Icon.vue'
-import ModalBox from '@/components/ModalBox.vue'
 import { securityEncryptionOptions, securityVersionOptions, securityModeOptions } from '@/config'
 const titleStack = ref(['Wireless', 'Security'])
 
 const store = useStore()
+const toast = useToast()
 
 const security = reactive({
   selected: store.state.wifi.security_mode,
@@ -38,22 +39,15 @@ const security = reactive({
 const submit = () => {
   store.dispatch('saveWifiSettings', security)
   console.log('Wifi-Security saved')
-  isSaveModalActive.value = true
+  toast.success('Security settings saved')
 }
-
-const isSaveModalActive = ref(false)
 
 const allDisabled = ref(store.state.checks.done)
 
 </script>
 
 <template>
-  <modal-box
-    v-model="isSaveModalActive"
-    title="Wifi Security Saved"
-  >
-    <p>Wifi-Security saved. Go to Statistics to check your Wifi-Status </p>
-  </modal-box>
+
   <title-bar :title-stack="titleStack" />
 
   <main-section>

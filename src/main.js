@@ -4,8 +4,11 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import { darkModeKey, styleKey, wifiSettingsKey } from '@/config.js'
+import Toast from 'vue-toastification'
 
 import './css/main.css'
+// Import the CSS or use your own!
+import 'vue-toastification/dist/index.css'
 
 /* Fetch sample data */
 store.dispatch('fetch', 'macFilters')
@@ -45,4 +48,9 @@ router.afterEach(to => {
   store.dispatch('fullScreenToggle', !!to.meta.fullScreen)
 })
 
-createApp(App).use(store).use(router).mount('#app')
+const toastOptions = {
+  // You can set your default options here
+  timeout: 1500
+}
+
+createApp(App).use(store).use(router).use(Toast, toastOptions).mount('#app')

@@ -1,6 +1,7 @@
 <script setup>
 import { ref, reactive, computed } from 'vue'
 import { useStore } from 'vuex'
+import { useToast } from 'vue-toastification'
 import { mdiInformationVariant, mdiCog, mdiWifi, mdiAlert, mdiCheck, mdiAlertOctagram, mdiLockAlert } from '@mdi/js'
 import MainSection from '@/components/MainSection.vue'
 import TitleBar from '@/components/TitleBar.vue'
@@ -17,11 +18,7 @@ import { selectModeOptions, securityModeOptions, securityVersionOptions, securit
 const titleStack = ref(['Wireless', 'Statistics'])
 
 const store = useStore()
-
-const stats = reactive({
-  ssid: store.state.wifi.ssid,
-  security_mode: store.state.wifi.security_mode
-})
+const toast = useToast()
 
 const darkMode = computed(() => store.state.darkMode)
 
@@ -61,8 +58,10 @@ const runChecks = () => {
   console.log('starting checks ...', checks.code)
   if (checks.code === '23985') {
     store.commit('runChecks', true)
+    toast.success('Running checks done ')
   } else {
     checks.wrongCode = true
+    toast.error('Please insert corect code')
   }
 }
 
@@ -78,14 +77,14 @@ const runChecks = () => {
       class="bg-gray-200"
     >
       <div class="flex flex-col gap-2">
-        <p><b>SSID: </b> {{ stats.ssid }} </p>
+        <p><b>SSID: </b> {{ store.state.wifi.ssid }} </p>
         <p><b>2,4 GHz: </b> {{ store.state.wifi.twoPointFourGHz ? 'aktiviert' : 'deaktiviert' }} </p>
         <p><b> 5 GHz: </b>{{ store.state.wifi.fiveGHz ? 'aktiviert' : 'deaktiviert' }}</p>
         <p><b>Mode:</b> {{ selectModeOptions[store.state.wifi.mode].label }}</p>
       </div>
       <divider />
       <div class="flex flex-col gap-2">
-        <p><b>Security Mode: </b> {{ securityModeOptions[stats.security_mode] }} </p>
+        <p><b>Security Mode: </b> {{ securityModeOptions[store.state.wifi.security_mode] }} </p>
         <div v-if="store.state.wifi.security_mode === 'psk'">
           <p><b>Version: </b> {{ securityVersionOptions[store.state.wifi.security_psk.version].label }}</p>
           <p><b>Encryption: </b> {{ securityEncryptionOptions[store.state.wifi.security_psk.encryption].label }}</p>

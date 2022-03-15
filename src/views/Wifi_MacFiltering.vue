@@ -1,6 +1,7 @@
 <script setup>
 import { ref, reactive } from 'vue'
 import { useStore } from 'vuex'
+import { useToast } from 'vue-toastification'
 import { mdiFilterOutline, mdiInformation, mdiArrowRight } from '@mdi/js'
 import MainSection from '@/components/MainSection.vue'
 import Notification from '@/components/Notification.vue'
@@ -15,11 +16,11 @@ import JbButtons from '@/components/JbButtons.vue'
 import JbButton from '@/components/JbButton.vue'
 import CardComponentCollapsable from '@/components/CardComponentCollapsable.vue'
 import Icon from '@/components/Icon.vue'
-import ModalBox from '@/components/ModalBox.vue'
 
 const titleStack = ref(['Wireless', 'Mac Filtering'])
 
 const store = useStore()
+const toast = useToast()
 
 const macFilter = reactive({
   enabled: 'disabled',
@@ -34,22 +35,14 @@ if (store.state.wifi.macFilter.enabled) {
 const submit = () => {
   store.dispatch('saveMacFilters', macFilter)
   console.log('Wifi-MacFilter saved')
-  isSaveModalActive.value = true
+  toast.success('MacFilter settings saved')
 }
-
-const isSaveModalActive = ref(false)
 
 const allDisabled = ref(store.state.checks.done)
 
 </script>
 
 <template>
-  <modal-box
-    v-model="isSaveModalActive"
-    title="MAC-Filter Settings Saved"
-  >
-    <p>MAC-Filter Settings saved. Go to Statistics to check your Wifi-Status </p>
-  </modal-box>
   <title-bar :title-stack="titleStack" />
   <main-section>
     <notification
