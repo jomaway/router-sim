@@ -19,17 +19,19 @@ const pdfSource = 'data-sources/Router-Sim.pdf'
   </titled-section>
 
   <main-section>
-    <vue-pdf-embed :source="pdfSource" />
+    <div class="flex flex-col gap-1  items-center text-lg">
+      <p> Erste <b>Informationen</b> finden Sie auf dem <b>Flyer</b>. </p>
+      <p> Weitere Informationen finden Sie auf direkt auf den einzelnen Seiten.</p>
+      <p> Falls Sie totzdem nicht weiter kommen oder eine Fragen haben. <b>Melden</b> sie sich und <b>fragen</b>.</p>
+    </div>
   </main-section>
 
   <titled-section first>
-    Advanced
+    Flyer
   </titled-section>
 
   <main-section>
-    <div class="flex justify-center">
-      <p><b>Melden</b> und <b>Fragen</b>!</p>
-    </div>
+    <vue-pdf-embed :source="pdfSource" />
   </main-section>
 
   <bottom-other-pages-section />

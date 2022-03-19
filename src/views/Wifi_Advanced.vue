@@ -50,7 +50,7 @@ const allDisabled = ref(store.state.checks.done)
     >
       <field
         label="Broadcast SSID"
-        help="Wenn diese Option aktiviert ist, taucht die SSID nicht in der Liste der verfügbaren WLANs auf."
+        help="Wenn diese Option deaktiviert ist, wird die SSID, auf einem Client (Smarphone, Laptop), nicht in der Liste der verfügbaren WLANs angezeigt."
       >
         <toggle-switch
           v-model="WifiAdvancedForm.broadcast_ssid"

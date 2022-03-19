@@ -58,7 +58,7 @@ const allDisabled = ref(store.state.checks.done)
     >
       <field
         label="Wireless Mac Filtering"
-        help="Here you can enable/disable the mac filtering globaly."
+        help="Hier kannst du den MAC-Filter ein oder ausschalten."
       >
         <check-radio-picker
           v-model="macFilter.enabled"
@@ -74,7 +74,7 @@ const allDisabled = ref(store.state.checks.done)
 
         <field
           label="Filter Rule"
-          help="Deny -> all devides with the listed mac address are blocked; Allow -> all deviced except the listed are blocked."
+          help="Hier werden die Filter Regeln festgelegt. deny -> Alle in der Liste eingetragenen Geräte können sich nicht verbinden ; allow -> Nur in der liste eingetragene Geräte können sich verbinden."
         >
           <check-radio-picker
             v-model="macFilter.rule"
