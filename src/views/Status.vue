@@ -3,7 +3,6 @@ import { computed, ref, reactive } from 'vue'
 import { useStore } from 'vuex'
 import {
   mdiWifi,
-  mdiCheckNetwork,
   mdiAccessPointNetwork,
   mdiAccessPointNetworkOff,
   mdiLan,
@@ -23,7 +22,6 @@ import MainSection from '@/components/MainSection.vue'
 import TitleBar from '@/components/TitleBar.vue'
 import CardWidget from '@/components/CardWidget.vue'
 import CardComponent from '@/components/CardComponent.vue'
-import Notification from '@/components/Notification.vue'
 import JbButtons from '@/components/JbButtons.vue'
 import JbButton from '@/components/JbButton.vue'
 import Divider from '@/components/Divider.vue'
@@ -33,10 +31,12 @@ import FilePicker from '@/components/FilePicker.vue'
 import Control from '@/components/Control.vue'
 import Field from '@/components/Field.vue'
 import CardComponentCollapsable from '@/components/CardComponentCollapsable.vue'
+import { useToast } from 'vue-toastification'
 
 const titleStack = ref(['General', 'Status'])
 
 const store = useStore()
+const toast = useToast()
 
 const lanStatus = ref('connected')
 const wanStatus = ref('connected')
@@ -61,6 +61,7 @@ function exportSettings () {
   element.click()
 
   document.body.removeChild(element)
+  toast.success('Exporting Settings done.')
 }
 
 const settingsFile = ref(null)
@@ -78,6 +79,7 @@ function loadSettings (value) {
   }
 
   reader.readAsText(settingsFile.value)
+  toast.success('Loading settings done.')
 }
 
 const isLoadModalActive = ref(false)
@@ -85,6 +87,7 @@ const isResetModalActive = ref(false)
 
 const resetRouter = () => {
   store.dispatch('reset')
+  toast.info('Reset Router')
 }
 
 </script>
@@ -114,12 +117,6 @@ const resetRouter = () => {
 
   <title-bar :title-stack="titleStack" />
   <main-section>
-    <notification
-      color="success"
-      :icon="mdiCheckNetwork"
-    >
-      Connected to the Internet on {{ status.wan_ip }}
-    </notification>
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-3 mb-6">
       <card-widget
         :trend="wanStatus"

@@ -398,7 +398,7 @@ const cbRunChecks = () => {
             </field>
             <field help="Durch die Reduzierung der Sendeleistung wird die Reichweite des Netzwerks beeinflusst.">
               <config-check-msg
-                :condition="!store.state.wifi.reduce_tx_power"
+                :condition="store.state.wifi.reduce_tx_power"
                 success-msg="Sendeleistung der Antennen reduziert."
                 warning-msg="Sendeleistung der Antennen nicht reduziert."
               />
