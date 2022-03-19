@@ -5,6 +5,8 @@ export const styleKey = 'style'
 export const wifiSettingsKey = 'wifi'
 export const ConfigCheckKey = 'confcheck'
 
+export const isDebugMode = false
+
 export const selectModeOptions = [
   { id: 0, label: '802.11 b only' },
   { id: 1, label: '802.11 g only' },

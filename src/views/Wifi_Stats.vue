@@ -12,7 +12,7 @@ import BottomOtherPagesSection from '@/components/BottomOtherPagesSection.vue'
 import CardComponentCollapsable from '@/components/CardComponentCollapsable.vue'
 import Field from '@/components/Field.vue'
 import Control from '@/components/Control.vue'
-import { selectModeOptions, securityModeOptions, securityVersionOptions, securityEncryptionOptions } from '@/config'
+import { selectModeOptions, securityModeOptions, securityVersionOptions, securityEncryptionOptions, isDebugMode } from '@/config'
 import ConfigCheckMsg from '@/components/ConfigCheckMsg.vue'
 import ConfigInfoMsg from '@/components/ConfigInfoMsg.vue'
 
@@ -55,7 +55,7 @@ const checks = reactive({
 
 const overviewCard = ref(null)
 const runChecksCode = ref(null)
-const checksDone = computed(() => store.state.checks.done)
+const checksDone = computed(() => isDebugMode ? true : store.state.checks.done)
 
 const runChecks = () => {
   console.log('starting checks ...', checks.code)
@@ -85,7 +85,7 @@ const cbRunChecks = () => {
     <card-component-collapsable
       ref="overviewCard"
       title="Overview:"
-      :expanded="!(checks.done)"
+      :expanded="!(checksDone)"
       class="bg-gray-200"
     >
       <div class="flex flex-col gap-2">
@@ -260,6 +260,7 @@ const cbRunChecks = () => {
               warning-msg="Die 5 GHz Frequenz ist nicht aktiviert"
             />
             <config-info-msg
+              v-if="store.state.wifi.ssid != ''"
               msg="Your SSID is:"
               :value="store.state.wifi.ssid"
             />
@@ -275,17 +276,17 @@ const cbRunChecks = () => {
               warning-msg="Unterstützung für ältere Wifi-Standards aktiviert. Das ist nicht nötig 🤔"
             />
             <config-check-msg
-              :condition="!wifi4Support"
+              :condition="wifi4Support"
               success-msg="Wifi-4️⃣ wird unterstützt."
               warning-msg="Wifi-4️⃣ wird nicht unterstützt."
             />
             <config-check-msg
-              :condition="!wifi5Support"
+              :condition="wifi5Support"
               success-msg="Wifi-5️⃣ wird unterstützt."
               warning-msg="Wifi-5️⃣ wird nicht unterstützt."
             />
             <config-check-msg
-              :condition="!wifi6Support"
+              :condition="wifi6Support"
               success-msg="Wifi-6️⃣ wird unterstützt."
               warning-msg="Wifi-6️⃣ wird nicht unterstützt."
             />
@@ -321,7 +322,7 @@ const cbRunChecks = () => {
             />
             <config-info-msg
               v-if="store.state.wifi.security_mode == 'wep'"
-              msg="Die Methode Wep ist veraltet und unsicher!"
+              msg="Die Methode WEP ist veraltet und unsicher!"
             />
             <config-info-msg
               v-if="store.state.wifi.security_mode == 'psk'"
@@ -388,18 +389,20 @@ const cbRunChecks = () => {
             <p class="font-bold mb-2">
               Advanced-Settings
             </p>
-            <field help="Wird der SSID Broadcast aktiviert wird das WLAN in der Liste der verfügbaren Netzwerke angezeigt.">
+            <field help="Wird der SSID Broadcast deaktiviert wird das WLAN in der Liste der verfügbaren Netzwerke nicht angezeigt. Für Hacker ist es jedoch trotzdem leicht auffindbar.">
               <config-check-msg
                 :condition="store.state.wifi.broadcast_ssid"
                 success-msg="SSID-Broadcast aktiviert. "
                 warning-msg="SSID-Broadcast deaktiviert."
               />
             </field>
-            <config-check-msg
-              :condition="!store.state.wifi.reduce_tx_power"
-              success-msg="Sendeleistung der Antennen reduziert."
-              warning-msg="Sendeleistung der Antennen nicht reduziert."
-            />
+            <field help="Durch die Reduzierung der Sendeleistung wird die Reichweite des Netzwerks beeinflusst.">
+              <config-check-msg
+                :condition="!store.state.wifi.reduce_tx_power"
+                success-msg="Sendeleistung der Antennen reduziert."
+                warning-msg="Sendeleistung der Antennen nicht reduziert."
+              />
+            </field>
             <field
               label="Zeitschaltung"
               help="Du solltest das WLAN in der Nacht automatisch abschalten!"
