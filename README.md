@@ -5,6 +5,10 @@ It is based on [Admin One Tailwind Vue](https://justboil.me/tailwind-admin-templ
 
 ![Screenshot](./screenshot.png)
 
+## Demo
+
+[Demo](https://jomaway.github.io/router-sim)
+
 ## Build and run
 
 Get the repo by cloning this repo or download the zip file.
@@ -16,9 +20,8 @@ Copy dist folder to your webserver.
 
 - Licensed under MIT
 
-## Useful Links
+## About
 
-- [JustBoil.me](https://justboil.me/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [Vue.js 3](https://v3.vuejs.org/)
-- [Vite](https://vitejs.dev)
+I started this projet for a lesson with the topic *Setting up WLAN access*.
+
+The purpose was to give my students the opportunity to config the router without needing much hardware.
