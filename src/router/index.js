@@ -135,19 +135,12 @@ const routes = [
   },
   {
     meta: {
-      title: 'Extra'
+      title: 'Extra',
+      fullScreen: true
     },
-    path: '/extra-diff',
-    name: 'extradiff',
-    component: () => import(/* webpackChunkName: "error" */ '@/views/Extra_Diff.vue')
-  },
-  {
-    meta: {
-      title: 'Checks'
-    },
-    path: '/extra-checks',
-    name: 'extrachecks',
-    component: () => import(/* webpackChunkName: "error" */ '@/views/Extra_Checks.vue')
+    path: '/extra',
+    name: 'extra',
+    component: () => import(/* webpackChunkName: "extra" */ '@/views/Extra.vue')
   }
 ]
 

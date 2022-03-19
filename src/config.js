@@ -3,6 +3,7 @@ export const darkModeKey = 'darkMode'
 export const styleKey = 'style'
 
 export const wifiSettingsKey = 'wifi'
+export const ConfigCheckKey = 'confcheck'
 
 export const selectModeOptions = [
   { id: 0, label: '802.11 b only' },

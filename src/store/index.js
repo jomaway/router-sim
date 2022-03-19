@@ -1,6 +1,6 @@
 import { createStore } from 'vuex'
 import axios from 'axios'
-import { darkModeKey, getDefaultState, styleKey, wifiSettingsKey } from '@/config.js'
+import { ConfigCheckKey, darkModeKey, getDefaultState, styleKey, wifiSettingsKey } from '@/config.js'
 import * as styles from '@/styles.js'
 import router from '@/router'
 
@@ -181,9 +181,9 @@ export default createStore({
       state.wifi.wps_pin = payload.wps_pin
       console.log('wps status stored ', state.wifi.wps_enabled)
     },
-    runChecks (state, payload) {
+    setCheckState (state, payload) {
       state.checks.done = payload
-      console.log('running checks ..', payload)
+      console.log('checks done', payload)
     },
     resetState (state) {
       Object.assign(state, getDefaultState())
@@ -277,10 +277,15 @@ export default createStore({
       commit('wps', payload)
       localStorage.setItem(wifiSettingsKey, JSON.stringify(state.wifi))
     },
+    checksDone ({ commit, state }, payload) {
+      commit('setCheckState', true)
+      localStorage.setItem(ConfigCheckKey, true)
+    },
     reset ({ commit }) {
       console.log('Reset store to default settings')
       commit('resetState')
       localStorage.removeItem(wifiSettingsKey)
+      localStorage.removeItem(ConfigCheckKey)
       router.go()
     }
   },

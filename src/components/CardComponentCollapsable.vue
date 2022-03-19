@@ -1,7 +1,7 @@
 <script setup>
 import { mdiChevronDown, mdiChevronUp } from '@mdi/js'
 import { useStore } from 'vuex'
-import { computed, ref } from 'vue'
+import { computed, ref, defineExpose } from 'vue'
 import Icon from '@/components/Icon.vue'
 
 const props = defineProps({
@@ -59,6 +59,8 @@ const submit = e => {
 }
 
 const isExpanded = ref(props.expanded)
+
+defineExpose({ toggleExpanded })
 
 </script>
 

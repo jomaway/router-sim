@@ -69,13 +69,8 @@ export default [
   'Extra',
   [
     {
-      to: '/extra-diff',
-      label: 'extra',
-      icon: mdiRunFast
-    },
-    {
-      to: '/extra-checks',
-      label: 'checks',
+      to: '/extra',
+      label: 'Extras',
       icon: mdiRunFast
     }
   ]

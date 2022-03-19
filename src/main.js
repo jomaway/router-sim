@@ -3,7 +3,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import { darkModeKey, styleKey, wifiSettingsKey } from '@/config.js'
+import { ConfigCheckKey, darkModeKey, styleKey, wifiSettingsKey } from '@/config.js'
 import Toast from 'vue-toastification'
 
 import './css/main.css'
@@ -25,6 +25,12 @@ if ((!localStorage[darkModeKey] && window.matchMedia('(prefers-color-scheme: dar
 if (localStorage[wifiSettingsKey]) {
   console.log('Found local stored wifi settings')
   store.dispatch('loadWifiSettings', localStorage.getItem(wifiSettingsKey))
+}
+
+/* Check State */
+if (localStorage[ConfigCheckKey]) {
+  console.log('Found local stored Config Key')
+  store.dispatch('checksDone')
 }
 
 /* Default title tag */

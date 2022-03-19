@@ -2,6 +2,7 @@
 import { mdiHelp } from '@mdi/js'
 import Level from '@/components/Level.vue'
 import JbButton from '@/components/JbButton.vue'
+import { computed, useSlots } from 'vue'
 
 defineProps({
   titleStack: {
@@ -9,6 +10,10 @@ defineProps({
     default: () => []
   }
 })
+
+const slots = useSlots()
+const hasRightSlot = computed(() => slots.right)
+
 </script>
 
 <template>
@@ -23,7 +28,12 @@ defineProps({
           {{ title }}
         </li>
       </ul>
+      <slot
+        v-if="hasRightSlot"
+        name="right"
+      />
       <jb-button
+        v-else
         to="/help"
         color="warning"
         label="Help"

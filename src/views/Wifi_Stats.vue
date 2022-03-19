@@ -2,25 +2,24 @@
 import { ref, reactive, computed } from 'vue'
 import { useStore } from 'vuex'
 import { useToast } from 'vue-toastification'
-import { mdiInformationVariant, mdiCog, mdiWifi, mdiAlert, mdiCheck, mdiAlertOctagram, mdiLockAlert } from '@mdi/js'
+import { mdiWifi } from '@mdi/js'
 import MainSection from '@/components/MainSection.vue'
 import TitleBar from '@/components/TitleBar.vue'
 import CardComponent from '@/components/CardComponent.vue'
 import Divider from '@/components/Divider.vue'
 import JbButton from '@/components/JbButton.vue'
 import BottomOtherPagesSection from '@/components/BottomOtherPagesSection.vue'
-import Notification from '@/components/Notification.vue'
 import CardComponentCollapsable from '@/components/CardComponentCollapsable.vue'
 import Field from '@/components/Field.vue'
 import Control from '@/components/Control.vue'
 import { selectModeOptions, securityModeOptions, securityVersionOptions, securityEncryptionOptions } from '@/config'
+import ConfigCheckMsg from '@/components/ConfigCheckMsg.vue'
+import ConfigInfoMsg from '@/components/ConfigInfoMsg.vue'
 
 const titleStack = ref(['Wireless', 'Statistics'])
 
 const store = useStore()
 const toast = useToast()
-
-const darkMode = computed(() => store.state.darkMode)
 
 const wifiEnabled = computed(() => store.state.wifi.twoPointFourGHz || store.state.wifi.fiveGHz)
 
@@ -48,21 +47,33 @@ const schedulerEnabled = computed(() => {
 })
 
 const checks = reactive({
+  running: false,
   done: store.state.checks.done,
   code: 0,
   wrongCode: false
 })
+
+const overviewCard = ref(null)
+const runChecksCode = ref(null)
 const checksDone = computed(() => store.state.checks.done)
 
 const runChecks = () => {
   console.log('starting checks ...', checks.code)
   if (checks.code === '23985') {
-    store.commit('runChecks', true)
-    toast.success('Running checks done ')
+    checks.running = true
+    overviewCard.value.toggleExpanded()
+    store.dispatch('checksDone', true)
+    toast.info('Running checks ... ')
+    setTimeout(cbRunChecks, 6000)
   } else {
     checks.wrongCode = true
     toast.error('Please insert corect code')
   }
+}
+
+const cbRunChecks = () => {
+  checks.running = false
+  toast.success('Running checks done ')
 }
 
 </script>
@@ -72,8 +83,9 @@ const runChecks = () => {
 
   <main-section>
     <card-component-collapsable
+      ref="overviewCard"
       title="Overview:"
-      expanded
+      :expanded="!(checks.done)"
       class="bg-gray-200"
     >
       <div class="flex flex-col gap-2">
@@ -113,7 +125,8 @@ const runChecks = () => {
     <div class="h-2" />
 
     <card-component
-      title="Run Checks"
+      v-if="!checksDone"
+      title="Run checks"
       class="bg-red-200"
     >
       <div class="flex flex-col gap-4">
@@ -124,15 +137,17 @@ const runChecks = () => {
           <b>Überprüfe</b> nochmal ob deine Einstellungen alle <b>Anforderungen</b> (siehe Whitebaord) erfüllen, bevor du die Checks startest.
         </p>
         <field
-          label="Starte die Checks"
+          label="Starte die Überprüfung"
           help="Gebe den Code ein und klicke auf den Button Run checks"
+          form
         >
           <control
-            id="runChecksCode"
+            ref="runChecksCode"
             placeholder="Enter Code"
             type="numbers"
             :wrong-input="checks.wrongCode"
             @input="event => checks.code = event.target.value"
+            @keyup.enter="runChecks"
           />
           <jb-button
             type="button"
@@ -145,364 +160,282 @@ const runChecks = () => {
     </card-component>
 
     <card-component
-      v-if="checksDone"
-      title="WLAN-Settings"
+      v-else
+      title="Auswertung"
+      class="bg-blue-200"
     >
-      <!-- WLAN check -->
-      <notification
-        v-if="wifiEnabled"
-        color="success"
-        :icon="mdiWifi"
-        permanent
-      >
-        WLAN is enabled.
-      </notification>
-      <notification
-        v-else
-        color="warning"
-        :icon="mdiWifi"
-      >
-        WLAN is disabled. Go to Wireless Settings to enable it.
-        <template #right>
-          <jb-button
-            to="/wifi-settings"
-            :icon="mdiCog"
-            icon-w="w-4"
-            icon-h="h-4"
-            :color="darkMode ? 'white' : 'light'"
-            :outline="darkMode"
-            small
-          />
-        </template>
-      </notification>
-
-      <!-- IF WLAN enabled -->
-      <div
-        v-if="wifiEnabled"
-        class="mb-6"
-      >
-        <!-- WLAN freq info -->
-        <notification
-          v-if="store.state.wifi.twoPointFourGHz"
-          color="info"
-          :icon="mdiInformationVariant"
-          permanent
-        >
-          The <b>2,4 GHz</b> frequency is enabled.
-        </notification>
-        <notification
-          v-else
-          color="warning"
-          :icon="mdiAlert"
-          permanent
-        >
-          The <b>2,4 GHz</b> frequency is disabled. Devices which only support this frequency can't connect to your Network.
-        </notification>
-
-        <notification
-          v-if="store.state.wifi.fiveGHz"
-          color="info"
-          :icon="mdiInformationVariant"
-          permanent
-        >
-          The <b>5 GHz</b> frequency is enabled.
-        </notification>
-        <notification
-          v-else
-          color="warning"
-          :icon="mdiAlert"
-          permanent
-        >
-          The <b>5 GHz</b> frequency is disabled. Devices which only support this frequency can't connect to your Network.
-        </notification>
-        <!-- WLAN ssid info -->
-        <notification
-          v-if="store.state.wifi.ssid != ''"
-          color="info"
-          :icon="mdiInformationVariant"
-          permanent
-        >
-          Your SSID is: <b> {{ store.state.wifi.ssid }} </b>
-        </notification>
-        <notification
-          v-else
-          color="danger"
-          :icon="mdiAlertOctagram"
-          permanent
-        >
-          Your SSID is emtpy!
-        </notification>
-        <!-- WLAN mode check  TODO! -->
-        <!-- Older SUpport check -->
-        <notification
-          v-if="!wifiBackwardsSupport"
-          color="success"
-          :icon="mdiCheck"
-          permanent
-        >
-          <b>WLAN Mode:</b> Good. 👍 Older Wifi-Versions should not be supported if not necessary!
-        </notification>
-        <notification
-          v-if="wifiBackwardsSupport"
-          color="warning"
-          :icon="mdiAlert"
-          permanent
-        >
-          <b>WLAN Mode:</b> Ahh. 🤔 You enabled support for older Wifi-versions. If not necessary disable them.
-        </notification>
-
-        <!-- WIFI-6 SUpport check -->
-        <notification
-          v-if="wifi4Support"
-          color="success"
-          :icon="mdiCheck"
-          permanent
-        >
-          <b>WLAN Mode:</b> Wifi-4️⃣ is supported
-        </notification>
-        <notification
-          v-if="!wifi4Support"
-          color="warning"
-          :icon="mdiAlert"
-          permanent
-        >
-          <b>WLAN Mode:</b> Wifi-4️⃣ is not supported!
-        </notification>
-        <!-- WIFI-5 SUpport check -->
-        <notification
-          v-if="wifi5Support"
-          color="success"
-          :icon="mdiCheck"
-          permanent
-        >
-          <b>WLAN Mode:</b> Wifi-5️⃣ is supported
-        </notification>
-        <notification
-          v-if="!wifi5Support"
-          color="warning"
-          :icon="mdiAlert"
-          permanent
-        >
-          <b>WLAN Mode:</b> Wifi-5️⃣ is not supported!
-        </notification>
-        <!-- WIFI-6 SUpport check -->
-        <notification
-          v-if="wifi6Support"
-          color="success"
-          :icon="mdiCheck"
-          permanent
-        >
-          <b>WLAN Mode:</b> Wifi-6️⃣is supported
-        </notification>
-        <notification
-          v-if="!wifi6Support"
-          color="warning"
-          :icon="mdiAlert"
-          permanent
-        >
-          <b>WLAN Mode:</b> Wifi-6️⃣ is not supported!
-        </notification>
-        <!-- WLAN channel check -->
-        <notification
-          v-if="store.state.wifi.channel > 0"
-          color="warning"
-          :icon="mdiAlert"
-          permanent
-        >
-          <b>WLAN Channel Settings:</b> Do you know what you are doing? If you don't have a reason choose the option <i>auto</i>.
-        </notification>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div class="flex flex-col gap-4">
+          <p>Hier siehst du die <b>Auswertung deiner Konfiguration</b>.</p>
+          <p>
+            Du kannst die aktuelle Konfiguration nun nicht mehr ändern.
+          </p>
+          <p class="mb-2">
+            Auf der <a
+              href="#/status"
+              class="link text-red-700 font-bold"
+            > ➡ Status Seite </a> kannst du einen <b>Reset</b> durchführen und mit der Konfiguration nochmal von vorne anfangen.
+          </p>
+        </div>
+        <div>
+          <field label="Bedeutung der Farben!">
+            <config-check-msg
+              :condition="true"
+              success-msg="Diese Einstellung ist gut. 👍"
+            />
+            <config-check-msg
+              :condition="false"
+              warning-msg="Diese Einstellung kann verbessert werden. 🤔"
+            />
+            <config-check-msg
+              :condition="false"
+              is-critical
+              warning-msg="Diese Einstellung macht dein WLAN unsicher und angreifbar! 🤬"
+            />
+            <config-info-msg msg="Dies ist eine Information. 🤗" />
+          </field>
+        </div>
       </div>
     </card-component>
 
-    <!-- IF WLAN enabled -->
-    <div
-      v-if="wifiEnabled && checksDone"
-      class="mb-6"
+    <div class="h-2" />
+
+    <card-component
+      v-if="checks.running"
+      class="bg-orange-600"
     >
-      <card-component title="WLAN-Security">
-        <!-- WLAN security check start -->
-        <notification
-          v-if="store.state.wifi.security_mode == 'disabled' || store.state.wifi.security_mode == 'wep'"
-          color="danger"
-          :icon="mdiAlertOctagram "
-          permanent
+      <div class="flex items-center gap-2">
+        <svg
+          role="status"
+          class="mr-2 w-10 h-10 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+          viewBox="0 0 100 101"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
         >
-          <b>Danger:</b> Security level to low.
-        </notification>
-        <notification
-          v-else-if="store.state.wifi.security_mode == 'wpa_e'"
-          color="warning"
-          :icon="mdiLockAlert"
-          permanent
-        >
-          <b>Warning:</b> Good Idea to use WPA/WPA2 Enterprise. But we don't have an Radius Server.
-        </notification>
-        <notification
-          v-else
-          color="success"
-          :icon="mdiCheck"
-          permanent
-        >
-          <b>Good choise:</b> Using WPA/WPA2-PSK is a good option if your password is strong enough. ➡ Check at: <a
-            class="text-yellow-400"
-            href="https://checkdeinpasswort.de/"
-            target="_blank"
-          >checkdeinpasswort.de</a>
-        </notification>
-        <!-- IF WLAN security = PSK  -->
-        <div
-          v-if="store.state.wifi.security_mode == 'wpa_psk'"
-          class="my-6"
-        >
-          <!-- Security PSK version check -->
-          <notification
-            v-if="store.state.wifi.security_psk.version > 0"
-            color="success"
-            :icon="mdiCheck"
-            permanent
-          >
-            <b>Security Version is good </b> WPA2 or WPA3 is a good choise
-          </notification>
-          <notification
-            v-if="store.state.wifi.security_psk.version == 0"
-            color="danger"
-            :icon="mdiAlert"
-            permanent
-          >
-            <b>Security Version:</b> Wahh. You should not use WPA anymore! 😮
-          </notification>
-          <!-- Security PSK encryption check -->
-          <notification
-            v-if="store.state.wifi.security_psk.encryption > 0"
-            color="success"
-            :icon="mdiCheck"
-            permanent
-          >
-            <b>Security Encryption:</b> The AES Encryption does a good job. 👍
-          </notification>
-          <notification
-            v-else
-            color="warning"
-            :icon="mdiAlert"
-            permanent
-          >
-            <b>Security Encryption:</b> You should update to AES if possible.
-          </notification>
-        </div>
-        <!-- WLAN security check end -->
-      </card-component>
-      <card-component title="Mac-Filter">
-        <!-- Mac Filter check -->
-        <notification
-          v-if="store.state.wifi.macFilter.enabled"
-          color="success"
-          :icon="mdiCheck"
-          permanent
-        >
-          <b>MAC-Filter enabled:</b> Enabling MAC-Filters is a good option to secure your Wifi-Network. But be aware that hackers can bypass this easily.
-        </notification>
-        <notification
-          v-else
-          color="warning"
-          :icon="mdiAlert"
-        >
-          <b>MAC-Filter disabled:</b> Enabling MAC-Filters is an option to secure your Wifi-Network.
-          <template #right>
-            <jb-button
-              to="/wifi-mac"
-              :icon="mdiCog"
-              icon-w="w-4"
-              icon-h="h-4"
-              :color="darkMode ? 'white' : 'light'"
-              :outline="darkMode"
-              small
+          <path
+            d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+            fill="currentColor"
+          />
+          <path
+            d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+            fill="currentFill"
+          />
+        </svg>
+        <p class="font-bold text-lg">
+          Die Konfiguration wird ausgewertet. Dies dauert einen kurzen Moment.
+        </p>
+      </div>
+    </card-component>
+
+    <div
+      v-if="checksDone && !(checks.running)"
+      id="check-results-wrapper"
+    >
+      <card-component-collapsable
+        expanded
+        title="WLAN-Settings"
+        class="mb-2"
+      >
+        <!-- WLAN check -->
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 w-full">
+          <div class="flex flex-col gap-1">
+            <p class="font-bold">
+              Allgemein
+            </p>
+            <config-check-msg
+              :condition="wifiEnabled"
+              :icon="mdiWifi"
+              success-msg="WLAN ist aktiviert."
+              warning-msg="Du hast das WLAN nicht aktiviert"
             />
-          </template>
-        </notification>
-      </card-component>
-      <card-component title="WLAN-Advanced-Settings">
-        <!-- WIFI Advanced check -->
-        <!-- WIFI Advanced - broadcast check -->
-        <notification
-          v-if="store.state.wifi.broadcast_ssid"
-          color="success"
-          :icon="mdiCheck"
-          permanent
-        >
-          <b>SSID-Broadcast:</b> enabled. This will allow you to see the Wifi in the List of available Networks.
-        </notification>
-        <notification
-          v-else
-          color="warning"
-          :icon="mdiAlert"
-          permanent
-        >
-          <b>SSID-Broadcast:</b> disabled. You won't find your WLAN in the List of available Networks.
-        </notification>
-        <!-- WIFI Advanced - reduce antenna tx power check -->
-        <notification
-          v-if="store.state.wifi.reduce_tx_power"
-          color="success"
-          :icon="mdiCheck"
-          permanent
-        >
-          <b>Reduce antenna transmit power:</b> enabled.
-        </notification>
-        <notification
-          v-else
-          color="warning"
-          :icon="mdiAlert"
-          permanent
-        >
-          <b>Reduce antenna transmit power:</b> disabled.
-        </notification>
-        <!-- WIFI Advanced - scheduler check -->
-        <notification
-          v-if="store.state.wifi.turn_off.from == '' || store.state.wifi.turn_off.till == ''"
-          color="warning"
-          :icon="mdiCheck"
-          permanent
-        >
-          <b>Scheduler disabled.</b>  Maybe you can automatically turn wifi off during the night?
-        </notification>
-        <notification
-          v-else
-          color="success"
-          :icon="mdiAlert"
-          permanent
-        >
-          <b>Scheduler active. </b> Check if the time settings make sence.
-        </notification>
-      </card-component>
-      <card-component title="WPS Settings">
-        <!-- WIFI WPS check -->
-        <notification
-          v-if="store.state.wifi.wps_enabled"
-          color="warning"
-          :icon="mdiCheck"
-          permanent
-        >
-          <b>WPS enabled.</b> WPS is a nice option to add new devices to the wlan. But it may be an security hole. Better turn it off.
-        </notification>
-        <notification
-          v-else
-          color="success"
-          :icon="mdiAlert"
-          permanent
-        >
-          <b>WPS disabled</b> That sounds like a good idea. 👌
-        </notification>
-      </card-component>
-      <card-component title="Further Information">
-        <!-- Further Information -->
-        <notification
-          color="info"
-          :icon="mdiInformationVariant"
-          permanent
-        >
-          No clients are currently connected.
-        </notification>
-      </card-component>
+            <config-check-msg
+              :condition="store.state.wifi.twoPointFourGHz"
+              success-msg="Die 2,4 GHz Frequenz is aktiviert."
+              warning-msg="Die 2,4 GHz Frequenz ist nicht aktiviert"
+            />
+            <config-check-msg
+              :condition="store.state.wifi.fiveGHz"
+              success-msg="Die 5 GHz Frequenz is aktiviert."
+              warning-msg="Die 5 GHz Frequenz ist nicht aktiviert"
+            />
+            <config-info-msg
+              msg="Your SSID is:"
+              :value="store.state.wifi.ssid"
+            />
+          </div>
+          <!-- right side -->
+          <div class="flex flex-col gap-1">
+            <p class="font-bold">
+              Unterstütze WLAN-Standards
+            </p>
+            <config-check-msg
+              :condition="!wifiBackwardsSupport"
+              success-msg="Unterstützung für ältere Wifi-Standards deaktiviert. Gut 👍"
+              warning-msg="Unterstützung für ältere Wifi-Standards aktiviert. Das ist nicht nötig 🤔"
+            />
+            <config-check-msg
+              :condition="!wifi4Support"
+              success-msg="Wifi-4️⃣ wird unterstützt."
+              warning-msg="Wifi-4️⃣ wird nicht unterstützt."
+            />
+            <config-check-msg
+              :condition="!wifi5Support"
+              success-msg="Wifi-5️⃣ wird unterstützt."
+              warning-msg="Wifi-5️⃣ wird nicht unterstützt."
+            />
+            <config-check-msg
+              :condition="!wifi6Support"
+              success-msg="Wifi-6️⃣ wird unterstützt."
+              warning-msg="Wifi-6️⃣ wird nicht unterstützt."
+            />
+          </div>
+        </div>
+        <!-- WLAN channel check -->
+        <config-check-msg
+          :condition="!store.state.wifi.channel > 0"
+          success-msg="Auto Channel aktiviert. Der Router wählt automatisch den verwendeten Kanal."
+          warning-msg="Du hast einen festen Kanal gewählt. Auto Channel ist meist die bessere Option."
+        />
+      </card-component-collapsable>
+
+      <card-component-collapsable
+        title="WLAN-Security"
+        expanded
+        class="mb-2"
+      >
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2 w-full">
+          <div>
+            <p class="font-bold mb-2">
+              Authentifizierung
+            </p>
+            <config-check-msg
+              :condition="!(store.state.wifi.security_mode == 'disabled' || store.state.wifi.security_mode == 'wep')"
+              success-msg="WLAN durch Authentifizierung abgesichert."
+              warning-msg="WLAN nicht abgesichert."
+              is-critical
+            />
+            <config-info-msg
+              v-if="store.state.wifi.security_mode == 'disabled'"
+              msg="Du hast keine Authentifizierung ausgewählt!"
+            />
+            <config-info-msg
+              v-if="store.state.wifi.security_mode == 'wep'"
+              msg="Die Methode Wep ist veraltet und unsicher!"
+            />
+            <config-info-msg
+              v-if="store.state.wifi.security_mode == 'psk'"
+              msg="Dein Passwort ist:"
+              :value="store.state.wifi.security_psk.pw"
+            />
+            <p
+              v-if="store.state.wifi.security_mode == 'psk'"
+              class="text-sm ml-2  text-slate-700"
+            >
+              Überprüfe die Sicherheit deines Passworts unter <a
+                href="https://checkdeinpasswort.de/"
+                target="_blank"
+                class="text-red-700"
+              >checkdeinpasswort.de</a>
+            </p>
+            <config-info-msg
+              v-if="store.state.wifi.security_mode == 'enterprise'"
+              msg="Für diese Authentifizierung brauchst du einen extra Radius server!"
+              is-warning
+            />
+          </div>
+          <div v-if="!(store.state.wifi.security_mode == 'disabled' || store.state.wifi.security_mode == 'wep')">
+            <p class="font-bold mb-2">
+              Verschlüsselung
+            </p>
+            <div v-if="store.state.wifi.security_mode == 'psk'">
+              <config-check-msg
+                :condition="store.state.wifi.security_psk.version > 0"
+                success-msg="WLAN Verschlüsselung sicher"
+                warning-msg="WLAN Verschlüsselung nicht sicher. WPA kann gehackt werden."
+                is-critical
+              />
+              <config-check-msg
+                :condition="store.state.wifi.security_psk.encryption == 1"
+                success-msg="Verschlüsselungsalgorithmus sicher. 👍"
+                warning-msg="Verschlüsselungsalgorithmus veraltet. Nutze AES."
+              />
+            </div>
+            <div v-else-if="store.state.wifi.security_mode == 'enterprise'">
+              <config-check-msg
+                :condition="store.state.wifi.security_enterprise.version > 0"
+                success-msg="WLAN Verschlüsselung sicher"
+                warning-msg="WLAN Verschlüsselung nicht sicher. WPA kann gehackt werden."
+                is-critical
+              />
+              <config-check-msg
+                :condition="store.state.wifi.security_enterprise.encryption == 1"
+                success-msg="Verschlüsselungsalgorithmus sicher. 👍"
+                warning-msg="Verschlüsselungsalgorithmus veraltet. Nutze AES."
+              />
+            </div>
+          </div>
+        </div>
+      </card-component-collapsable>
+
+      <card-component-collapsable
+        title="Weitere Einstellungen"
+        expanded
+        class="mb-2"
+      >
+        <div class="grid grid-cols-1 md: grid-cols-2 gap-2">
+          <div>
+            <p class="font-bold mb-2">
+              Advanced-Settings
+            </p>
+            <field help="Wird der SSID Broadcast aktiviert wird das WLAN in der Liste der verfügbaren Netzwerke angezeigt.">
+              <config-check-msg
+                :condition="store.state.wifi.broadcast_ssid"
+                success-msg="SSID-Broadcast aktiviert. "
+                warning-msg="SSID-Broadcast deaktiviert."
+              />
+            </field>
+            <config-check-msg
+              :condition="!store.state.wifi.reduce_tx_power"
+              success-msg="Sendeleistung der Antennen reduziert."
+              warning-msg="Sendeleistung der Antennen nicht reduziert."
+            />
+            <field
+              label="Zeitschaltung"
+              help="Du solltest das WLAN in der Nacht automatisch abschalten!"
+            >
+              <config-check-msg
+                :condition="!(store.state.wifi.turn_off.from == '' || store.state.wifi.turn_off.till == '')"
+                success-msg="Automatische Zeitabschaltung aktiviert."
+                warning-msg="Automatische Zeitabschaltung nicht aktiviert."
+              />
+            </field>
+          </div>
+          <!-- right side -->
+          <div>
+            <field
+              label="MAC-Filter"
+              help="Durch die Aktivierung des MAC-Filters kann man WLAN Geräte mit bestimmten MAC-Adressen vom WLAN ausschließen."
+            >
+              <config-check-msg
+                :condition="store.state.wifi.macFilter.enabled"
+                success-msg="MAC-Filter aktiviert."
+                warning-msg="MAC-Filter nicht aktiviert."
+              />
+            </field>
+            <field
+              label="WPS-Einstellungen"
+              help="WPS vereinfacht es neue Geräte zum WLAN hinzuzufügen. Macht den WLAN-Zugang aber auch einfacher angreifbar."
+            >
+              <config-check-msg
+                :condition="!store.state.wifi.wps_enabled"
+                success-msg="WPS nicht aktiviert."
+                warning-msg="WPS aktiviert."
+              />
+            </field>
+          </div>
+        </div>
+      </card-component-collapsable>
     </div>
   </main-section>
   <bottom-other-pages-section />
