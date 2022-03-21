@@ -12,7 +12,7 @@ import Divider from '@/components/Divider.vue'
 import JbButton from '@/components/JbButton.vue'
 import JbButtons from '@/components/JbButtons.vue'
 import BottomOtherPagesSection from '@/components/BottomOtherPagesSection.vue'
-import CardComponentCollapsable from '@/components/CardComponentCollapsable.vue'
+import CardComponent from '@/components/CardComponent.vue'
 import Notification from '@/components/Notification.vue'
 import Icon from '@/components/Icon.vue'
 import { securityEncryptionOptions, securityVersionOptions, securityModeOptions } from '@/config'
@@ -50,10 +50,9 @@ const allDisabled = ref(store.state.checks.done)
   <title-bar :title-stack="titleStack" />
 
   <main-section>
-    <card-component-collapsable
+    <card-component
       title="Wifi-Security"
       :icon="mdiWifi"
-      expanded
       form
       @submit.prevent="submit"
     >
@@ -82,7 +81,7 @@ const allDisabled = ref(store.state.checks.done)
       <div v-else-if="security.selected == 'psk'">
         <div class="grid grid-cols-1 gap-6 mb-6 lg:grid-cols-2 ">
           <field
-            label="Version"
+            label="Encryption"
             help="WPA sollte nicht mehr verwendet werden. Umso höher die Version umso besser. Allerdings unterstützen noch nicht alle Clients WPA3!"
           >
             <control
@@ -92,7 +91,7 @@ const allDisabled = ref(store.state.checks.done)
             />
           </field>
           <field
-            label="Encryption"
+            label="Algorithm"
             help="Select encryption type: AES ist moderner und sicherer als TKIP"
           >
             <control
@@ -122,7 +121,7 @@ const allDisabled = ref(store.state.checks.done)
           Ein externer Radius Server ist für diese Einstellung notwendig!
         </notification>
         <div class="grid grid-cols-1 gap-6 mb-6 lg:grid-cols-2 ">
-          <field label="Version">
+          <field label="Encryption">
             <control
               v-model="security.wpa_e.version"
               :options="securityVersionOptions"
@@ -130,7 +129,7 @@ const allDisabled = ref(store.state.checks.done)
             />
           </field>
           <field
-            label="Encryption"
+            label="Algorithm"
             help="Select encryption type"
           >
             <control
@@ -193,7 +192,7 @@ const allDisabled = ref(store.state.checks.done)
           :disabled="allDisabled"
         />
       </jb-buttons>
-    </card-component-collapsable>
+    </card-component>
   </main-section>
 
   <main-section>

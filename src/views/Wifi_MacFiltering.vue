@@ -54,6 +54,7 @@ const allDisabled = ref(store.state.checks.done)
     </notification>
 
     <card-component
+      form
       class="mb-6"
     >
       <field

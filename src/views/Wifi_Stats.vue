@@ -128,6 +128,8 @@ const cbRunChecks = () => {
       v-if="!checksDone"
       title="Run checks"
       class="bg-red-200"
+      form
+      @submit.prevent="runChecks"
     >
       <div class="flex flex-col gap-4">
         <p class="">
@@ -147,13 +149,11 @@ const cbRunChecks = () => {
             type="numbers"
             :wrong-input="checks.wrongCode"
             @input="event => checks.code = event.target.value"
-            @keyup.enter="runChecks"
           />
           <jb-button
-            type="button"
+            type="submit"
             color="warning"
             label="Run checks"
-            @click="runChecks"
           />
         </field>
       </div>
