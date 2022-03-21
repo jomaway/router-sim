@@ -190,6 +190,7 @@ const resetRouter = () => {
     <card-component-collapsable
       title="Getting started."
       expanded
+      class="bg-blue-200"
     >
       <div class="flex justify-start">
         <icon :path="mdiHumanGreeting" />
@@ -264,6 +265,9 @@ const resetRouter = () => {
             </ul>
             <p class="mt-4">
               <i>Hinweis:</i> Die NETWORK Einstellungen sind aktuell deaktiviert.
+            </p>
+            <p class="mt-2">
+              <i>Für die schnellen:</i> Unter Extras findest du weitere Informationen falls du schneller fertig bist.
             </p>
           </div>
         </div>

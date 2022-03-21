@@ -50,7 +50,7 @@ const allDisabled = ref(store.state.checks.done)
       :icon="mdiFilterOutline"
       permanent
     >
-      <b>Mac Filtering</b> is used to disable access for devices with a given mac address.
+      <b>Mac Filter:</b> Beispielhaft sind hier die Geräte von Tom eingetragen. Bei einem echtem Router kannst du Adressen hinzuzufügen und entfernen.
     </notification>
 
     <card-component
@@ -75,7 +75,7 @@ const allDisabled = ref(store.state.checks.done)
 
         <field
           label="Filter Rule"
-          help="Hier werden die Filter Regeln festgelegt. deny -> Alle in der Liste eingetragenen Geräte können sich nicht verbinden ; allow -> Nur in der liste eingetragene Geräte können sich verbinden."
+          help="Hier werden die Filter Regeln festgelegt. Weitere Informationen, welche Regel was bewirkt sind weiter unten zu finden."
         >
           <check-radio-picker
             v-model="macFilter.rule"

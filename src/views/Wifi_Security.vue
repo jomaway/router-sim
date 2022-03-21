@@ -13,9 +13,11 @@ import JbButton from '@/components/JbButton.vue'
 import JbButtons from '@/components/JbButtons.vue'
 import BottomOtherPagesSection from '@/components/BottomOtherPagesSection.vue'
 import CardComponent from '@/components/CardComponent.vue'
+import CardComponentCollapsable from '@/components/CardComponentCollapsable.vue'
 import Notification from '@/components/Notification.vue'
 import Icon from '@/components/Icon.vue'
 import { securityEncryptionOptions, securityVersionOptions, securityModeOptions } from '@/config'
+
 const titleStack = ref(['Wireless', 'Security'])
 
 const store = useStore()
